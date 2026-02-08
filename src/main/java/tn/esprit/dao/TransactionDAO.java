@@ -123,13 +123,13 @@ public class TransactionDAO implements CrudInterface<Transaction> {
         int id = rs.getInt("id");
         int userId = rs.getInt("user_id");
         BigDecimal amount = rs.getBigDecimal("amount");
-        TransactionType type = TransactionType.valueOf(rs.getString("type"));
-        TransactionStatus status = TransactionStatus.valueOf(rs.getString("status"));
+        TransactionType type = TransactionType.valueOf(rs.getString("type").toUpperCase());
+        TransactionStatus status = TransactionStatus.valueOf(rs.getString("status").toUpperCase());
         String description = rs.getString("description");
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
 
         String refTypeStr = rs.getString("reference_type");
-        ReferenceType referenceType = refTypeStr != null ? ReferenceType.valueOf(refTypeStr) : null;
+        ReferenceType referenceType = refTypeStr != null ? ReferenceType.valueOf(refTypeStr.toUpperCase()) : null;
 
         Integer referenceId = rs.getObject("reference_id") != null ? rs.getInt("reference_id") : null;
 
