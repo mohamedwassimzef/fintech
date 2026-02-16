@@ -90,9 +90,9 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-            <TabPane prefHeight="785.0" prefWidth="847.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="mainTabs" prefHeight="785.0" prefWidth="847.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Untitled Tab 1">
+                <Tab fx:id="assetFormTab" text="Untitled Tab 1">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="560.0" prefWidth="491.0">
                            <children>
@@ -117,7 +117,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Asset List">
+                <Tab fx:id="assetListTab" text="Asset List">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -135,7 +135,7 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <Button fx:id="updateAssetButton" layoutX="223.0" layoutY="593.0" mnemonicParsing="false" text="Update" disable="true" />
+                              <Button fx:id="updateAssetButton" layoutX="223.0" layoutY="593.0" mnemonicParsing="false" text="Update" disable="true" onAction="#handleUpdateAssetButton" />
                               <Button fx:id="deleteAssetButton" layoutX="522.0" layoutY="593.0" mnemonicParsing="false" text="Delete" disable="true" onAction="#handleDeleteAssetButton" />
                            </children>
                         </AnchorPane>

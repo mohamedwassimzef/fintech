@@ -7,6 +7,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -77,8 +79,18 @@ public class MainController {
     @FXML
     private Button deleteAssetButton;
 
+    @FXML
+    private TabPane mainTabs;
+
+    @FXML
+    private Tab assetFormTab;
+
+    @FXML
+    private Tab assetListTab;
+
     private final ObservableList<InsuredAsset> assets = FXCollections.observableArrayList();
     private InsuredAsset selectedAsset;
+    private boolean isEditMode = false;
 
     @FXML
     public void handleAdd() {
@@ -115,11 +127,44 @@ public class MainController {
         });
 
         refreshAssetsTable();
+        setEditMode(false);
+    }
+
+    private void setEditMode(boolean enabled) {
+        isEditMode = enabled;
+        if (enabled) {
+            SubAsset.setText("Update");
+        } else {
+            SubAsset.setText("Submit");
+        }
     }
 
     private void setAssetActionButtonsEnabled(boolean enabled) {
         updateAssetButton.setDisable(!enabled);
         deleteAssetButton.setDisable(!enabled);
+    }
+
+    @FXML
+    private void handleUpdateAssetButton() {
+        if (selectedAsset == null) {
+            showAlert(AlertType.WARNING, "No Selection", "Please double-click an asset first.");
+            return;
+        }
+
+        AssName.setText(selectedAsset.getName());
+        AssType.setText(selectedAsset.getType());
+        AssValue.setText(String.valueOf(selectedAsset.getValue()));
+        AssDesc.setText(selectedAsset.getDescription());
+        AssUser.setText(String.valueOf(selectedAsset.getUserId()));
+
+        if (selectedAsset.getCreatedAt() != null) {
+            AssCreated.setValue(selectedAsset.getCreatedAt().toLocalDate());
+        } else {
+            AssCreated.setValue(null);
+        }
+
+        setEditMode(true);
+        mainTabs.getSelectionModel().select(assetFormTab);
     }
 
     private void refreshAssetsTable() {
@@ -128,6 +173,7 @@ public class MainController {
         assets.setAll(allAssets);
         selectedAsset = null;
         setAssetActionButtonsEnabled(false);
+        setEditMode(false);
     }
 
     @FXML
@@ -181,33 +227,71 @@ public class MainController {
                 return;
             }
 
-            // Create the asset
-            InsuredAsset asset = new InsuredAsset(
-                name,
-                type,
-                assetValue,
-                description,
-                userIdInt
-            );
-
             LocalDate createdDate = AssCreated.getValue();
-            if (createdDate != null) {
-                asset.setCreatedAt(createdDate.atStartOfDay());
-            }
 
             InsuredAssetDAO assetDAO = new InsuredAssetDAO();
-            boolean created = assetDAO.create(asset);
+            boolean success;
 
-            if (created) {
-                showAlert(AlertType.INFORMATION, "Success",
-                         "Insured Asset created successfully!");
-                System.out.println("Asset created successfully: " + asset);
+            if (isEditMode) {
+                if (selectedAsset == null) {
+                    showAlert(AlertType.WARNING, "No Selection", "Please double-click an asset first.");
+                    return;
+                }
+
+                InsuredAsset asset = new InsuredAsset(
+                    selectedAsset.getId(),
+                    name,
+                    type,
+                    assetValue,
+                    description,
+                    selectedAsset.getCreatedAt(),
+                    userIdInt
+                );
+
+                if (createdDate != null) {
+                    asset.setCreatedAt(createdDate.atStartOfDay());
+                }
+
+                success = assetDAO.update(asset);
+
+                if (success) {
+                    showAlert(AlertType.INFORMATION, "Updated", "Insured Asset updated successfully!");
+                    System.out.println("Asset updated successfully: " + asset);
+                } else {
+                    showAlert(AlertType.ERROR, "Update Failed", "Failed to update Insured Asset.");
+                    System.out.println("Failed to update asset: " + asset);
+                }
+            } else {
+                InsuredAsset asset = new InsuredAsset(
+                    name,
+                    type,
+                    assetValue,
+                    description,
+                    userIdInt
+                );
+
+                if (createdDate != null) {
+                    asset.setCreatedAt(createdDate.atStartOfDay());
+                }
+
+                success = assetDAO.create(asset);
+
+                if (success) {
+                    showAlert(AlertType.INFORMATION, "Success",
+                             "Insured Asset created successfully!");
+                    System.out.println("Asset created successfully: " + asset);
+                } else {
+                    showAlert(AlertType.ERROR, "Database Error",
+                             "Failed to create Insured Asset. Please check the console for details.");
+                    System.out.println("Failed to create asset: " + asset);
+                }
+            }
+
+            if (success) {
                 clearForm();
                 refreshAssetsTable();
-            } else {
-                showAlert(AlertType.ERROR, "Database Error",
-                         "Failed to create Insured Asset. Please check the console for details.");
-                System.out.println("Failed to create asset: " + asset);
+                setEditMode(false);
+                mainTabs.getSelectionModel().select(assetListTab);
             }
 
         } catch (Exception e) {
