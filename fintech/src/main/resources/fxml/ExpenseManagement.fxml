@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.ExpenseManagementController"
+            style="-fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);">
+
+    <!-- Top Menu Bar -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: rgba(255,255,255,0.1); -fx-padding: 15;">
+            <Label text="💰 Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🏠 Home" onAction="#showWelcome"
+                    style="-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+            <Button text="💵 Budgets" onAction="#showBudgets"
+                    style="-fx-background-color: rgba(255,255,255,0.3); -fx-text-fill: white; -fx-font-size: 14px; -fx-cursor: hand;"/>
+            <Button text="📝 Expenses" onAction="#showExpenses"
+                    style="-fx-background-color: rgba(255,255,255,0.5); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+
+            <!-- Header Section -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);">
+                <VBox>
+                    <Label text="Expense Management" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <Label text="Track and manage all your expenses" style="-fx-font-size: 14px; -fx-text-fill: #666;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Add New Expense" onAction="#handleAddExpense"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                <Button text="🔄 Refresh" onAction="#handleRefresh"
+                        style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- Expense Table -->
+            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);" VBox.vgrow="ALWAYS">
+                <Label text="All Expenses" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333; -fx-padding: 0 0 10 0;"/>
+
+                <TableView fx:id="expenseTable" VBox.vgrow="ALWAYS" style="-fx-background-radius: 8;">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="amountColumn" text="Amount" prefWidth="100"/>
+                        <TableColumn fx:id="categoryColumn" text="Category" prefWidth="120"/>
+                        <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250"/>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
+                        <TableColumn fx:id="budgetColumn" text="Linked Budget" prefWidth="150"/>
+                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

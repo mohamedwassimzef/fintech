@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.WelcomeScreenController"
+            style="-fx-background-color: #667eea;">
+
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #5568d3; -fx-padding: 15;">
+            <Label text="Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Home" onAction="#showWelcome"
+                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
+            <Button text="Budgets" onAction="#showBudgets"
+                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
+            <Button text="Expenses" onAction="#showExpenses"
+                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Welcome Back!" style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                <Label fx:id="dateLabel" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER">
+
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
+                      prefWidth="250" prefHeight="120" alignment="CENTER">
+                    <Label text="Total Budgets" style="-fx-font-size: 14px;"/>
+                    <Label fx:id="totalBudgetsLabel" text="0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
+                    <Label fx:id="totalBudgetAmountLabel" text="0.00" style="-fx-font-size: 14px;"/>
+                </VBox>
+
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
+                      prefWidth="250" prefHeight="120" alignment="CENTER">
+                    <Label text="Total Spent" style="-fx-font-size: 14px;"/>
+                    <Label fx:id="totalSpentLabel" text="0.00" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #f44336;"/>
+                    <Label fx:id="expenseCountLabel" text="0 expenses" style="-fx-font-size: 14px;"/>
+                </VBox>
+
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
+                      prefWidth="250" prefHeight="120" alignment="CENTER">
+                    <Label text="Remaining" style="-fx-font-size: 14px;"/>
+                    <Label fx:id="remainingLabel" text="0.00" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                    <Label fx:id="percentageLabel" text="0 percent used" style="-fx-font-size: 14px;"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20" alignment="CENTER">
+
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
+                      prefWidth="400" alignment="CENTER">
+                    <Label text="Spending by Category" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <PieChart fx:id="categoryPieChart" prefHeight="300" prefWidth="350" legendVisible="true"/>
+                </VBox>
+
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
+                      prefWidth="400" prefHeight="350">
+                    <Label text="Budget Status" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                        <VBox fx:id="budgetStatusContainer" spacing="10"/>
+                    </ScrollPane>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

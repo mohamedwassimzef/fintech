@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.controllers.AddExpenseController"
+      spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 20;">
+
+    <Label text="Add New Expense" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <Separator/>
+
+    <GridPane hgap="10" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100" prefWidth="120"/>
+            <ColumnConstraints minWidth="200" prefWidth="300"/>
+        </columnConstraints>
+
+        <!-- Amount -->
+        <Label text="Amount:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="amountField" promptText="e.g., 45.50"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <!-- Category -->
+        <Label text="Category:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                  prefWidth="300"/>
+
+        <!-- Description -->
+        <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionArea" promptText="e.g., Supermarket shopping"
+                  GridPane.rowIndex="2" GridPane.columnIndex="1" prefRowCount="3"/>
+
+        <!-- Expense Date -->
+        <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="expenseDatePicker" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                    prefWidth="300"/>
+
+        <!-- Budget (optional) -->
+        <Label text="Link to Budget:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="budgetComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                  prefWidth="300" promptText="(Optional) Select a budget"/>
+    </GridPane>
+
+    <!-- Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel"
+                style="-fx-background-color: #757575; -fx-text-fill: white;"/>
+        <Button text="Save Expense" onAction="#handleSave"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+    </HBox>
+
+</VBox>
