@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.services.EditTransactionController"
+      styleClass="form-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/forms.css"/>
+        <String fx:value="/styles/buttons.css"/>
+    </stylesheets>
+
+    <!-- Header -->
+    <VBox styleClass="form-header">
+        <Label text="✏️" styleClass="form-header-icon"/>
+        <Label text="Modifier la Transaction"           styleClass="form-header-title"/>
+        <Label text="Modifiez les détails de la transaction" styleClass="form-header-subtitle"/>
+    </VBox>
+
+    <!-- Info strip (read-only: type + sender → receiver) -->
+    <VBox styleClass="form-info-strip">
+        <Label fx:id="infoLabel" text="" styleClass="form-info-strip-label"/>
+    </VBox>
+
+    <!-- Form card -->
+    <VBox styleClass="form-card">
+
+        <!-- Montant -->
+        <VBox styleClass="form-field-group">
+            <Label text="💵 Montant (TND) *" styleClass="form-field-label"/>
+            <TextField fx:id="amountField"
+                       promptText="Ex: 100.50"
+                       styleClass="form-input-lg"/>
+        </VBox>
+
+        <!-- Description -->
+        <VBox styleClass="form-field-group">
+            <Label text="📝 Description" styleClass="form-field-label"/>
+            <TextField fx:id="descriptionField"
+                       promptText="Ex: Paiement facture"
+                       styleClass="form-input"/>
+        </VBox>
+
+        <!-- Statut -->
+        <VBox styleClass="form-field-group">
+            <Label text="📊 Statut *" styleClass="form-field-label"/>
+            <ComboBox fx:id="statusBox"
+                      prefWidth="400"
+                      styleClass="form-combo"/>
+        </VBox>
+
+        <Label fx:id="errorLabel" text="" styleClass="form-error"/>
+
+    </VBox>
+
+    <!-- Actions -->
+    <HBox styleClass="form-actions">
+        <Button text="❌ Annuler"     onAction="#cancel"             styleClass="btn-cancel"/>
+        <Button text="💾 Enregistrer" onAction="#saveTransaction"    styleClass="btn-submit"/>
+    </HBox>
+
+</VBox>

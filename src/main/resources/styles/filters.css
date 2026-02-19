@@ -1,0 +1,55 @@
+/* ============================================================
+   filters.css — Search & filter bar
+   ============================================================ */
+
+.filter-bar {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12px;
+    -fx-padding: 18px;
+    -fx-spacing: 12px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.filter-icon {
+    -fx-font-size: 20px;
+}
+
+.filter-search {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #64748b;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+
+.filter-search:focused {
+    -fx-border-color: #3b82f6;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1.5px;
+}
+
+.filter-combo {
+    -fx-background-color: #0f172a;
+    -fx-background-radius: 10px;
+    -fx-padding: 6px;
+}
+
+.filter-combo .list-cell {
+    -fx-background-color: #0f172a;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.filter-combo .list-cell:hover {
+    -fx-background-color: #1e293b;
+}
+
+.filter-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-combo .arrow {
+    -fx-background-color: #94a3b8;
+}

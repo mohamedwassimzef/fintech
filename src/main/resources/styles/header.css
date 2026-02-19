@@ -1,0 +1,21 @@
+/* ============================================================
+   header.css — Top header bar
+   ============================================================ */
+
+.header-bar {
+    -fx-background-color: #1e293b;
+    -fx-padding: 20 30 20 30;
+    -fx-spacing: 15px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.header-subtitle {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+}

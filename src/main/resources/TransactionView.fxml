@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.services.TransactionController"
+            styleClass="app-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/navbar.css"/>
+        <String fx:value="/styles/header.css"/>
+        <String fx:value="/styles/dashboard.css"/>
+        <String fx:value="/styles/filters.css"/>
+        <String fx:value="/styles/buttons.css"/>
+        <String fx:value="/styles/cards.css"/>
+    </stylesheets>
+
+    <!-- SIDEBAR -->
+    <left>
+        <VBox styleClass="sidebar">
+            <VBox styleClass="sidebar-logo">
+                <Label text="FINTECH"          styleClass="sidebar-logo-title"/>
+                <Label text="Finance Platform" styleClass="sidebar-logo-subtitle"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
+            <VBox styleClass="sidebar-user-card">
+                <Label fx:id="labelCurrentUser" text="👤 Utilisateur" styleClass="sidebar-username"/>
+                <Label fx:id="labelUserRole"    text="👥 Rôle"        styleClass="sidebar-role"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
+            <Button text="📊 Transactions"                           styleClass="nav-btn-active"/>
+            <Button fx:id="btnComplaints" text="📮 Réclamations"
+                    onAction="#navigateToComplaints"                 styleClass="nav-btn"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Version 1.0.0" styleClass="sidebar-version"/>
+        </VBox>
+    </left>
+
+    <!-- HEADER -->
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="Gestion des Transactions" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Actualiser"          onAction="#refreshTable"           styleClass="btn-secondary"/>
+            <Button text="📥 Exporter PDF"         onAction="#exportToPdf"            styleClass="btn-export"/>
+            <Button text="➕ Nouvelle Transaction" onAction="#openAddTransactionView" styleClass="btn-primary"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENT -->
+    <center>
+        <VBox styleClass="content-area">
+
+            <!-- KPIs -->
+            <HBox spacing="25" alignment="CENTER_LEFT">
+                <VBox styleClass="kpi-card, kpi-card-debit">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="💳" styleClass="kpi-icon"/>
+                        <Label text="Total Débit" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelTotalDebit" text="0.00 TND" styleClass="kpi-value-amount"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-credit">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="💰" styleClass="kpi-icon"/>
+                        <Label text="Total Crédit" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelTotalCredit" text="0.00 TND" styleClass="kpi-value-amount"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-count">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="📊" styleClass="kpi-icon"/>
+                        <Label text="Transactions" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelCount" text="0" styleClass="kpi-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Stats chart panel -->
+            <VBox fx:id="statsPanel" styleClass="stats-panel"/>
+
+            <!-- Filter bar -->
+            <HBox styleClass="filter-bar">
+                <Label text="🔍" styleClass="filter-icon"/>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher..."
+                           prefWidth="260"
+                           styleClass="filter-search"/>
+                <ComboBox fx:id="statusFilter" prefWidth="155" promptText="Statut" styleClass="filter-combo"/>
+                <ComboBox fx:id="typeFilter"   prefWidth="140" promptText="Type"   styleClass="filter-combo"/>
+                <Button text="🔎 Filtrer" onAction="#applyFilter" styleClass="btn-filter"/>
+            </HBox>
+
+            <!-- Transaction cards -->
+            <ScrollPane fitToWidth="true" styleClass="scroll-transparent" VBox.vgrow="ALWAYS">
+                <VBox fx:id="transactionsContainer" spacing="15" style="-fx-padding: 5;"/>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

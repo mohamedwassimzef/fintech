@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.services.ComplaintController"
+            styleClass="app-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/navbar.css"/>
+        <String fx:value="/styles/header.css"/>
+        <String fx:value="/styles/dashboard.css"/>
+        <String fx:value="/styles/filters.css"/>
+        <String fx:value="/styles/buttons.css"/>
+        <String fx:value="/styles/cards.css"/>
+    </stylesheets>
+
+    <!-- SIDEBAR -->
+    <left>
+        <VBox styleClass="sidebar">
+            <VBox styleClass="sidebar-logo">
+                <Label text="FINTECH"          styleClass="sidebar-logo-title"/>
+                <Label text="Finance Platform" styleClass="sidebar-logo-subtitle"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
+            <VBox styleClass="sidebar-user-card">
+                <Label fx:id="labelCurrentUser" text="👤 Utilisateur" styleClass="sidebar-username"/>
+                <Label fx:id="labelUserRole"    text="👥 Rôle"        styleClass="sidebar-role"/>
+            </VBox>
+            <Separator styleClass="sidebar-separator"/>
+            <Button fx:id="btnTransactions" text="📊 Transactions"
+                    onAction="#navigateToTransactions"              styleClass="nav-btn"/>
+            <Button text="📮 Réclamations"                         styleClass="nav-btn-active"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Version 1.0.0" styleClass="sidebar-version"/>
+        </VBox>
+    </left>
+
+    <!-- HEADER -->
+    <top>
+        <HBox styleClass="header-bar">
+            <Label text="Tableau des Réclamations" styleClass="header-title"/>
+            <Label text="(Toutes les réclamations — visible par tous)" styleClass="header-subtitle"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🔄 Actualiser"        onAction="#refreshComplaints"   styleClass="btn-secondary"/>
+            <Button text="📥 Exporter PDF"       onAction="#exportToPdf"         styleClass="btn-export"/>
+            <Button fx:id="btnNewComplaint"
+                    text="➕ Nouvelle Réclamation"
+                    onAction="#openAddComplaintView"                             styleClass="btn-primary"/>
+        </HBox>
+    </top>
+
+    <!-- CONTENT -->
+    <center>
+        <VBox styleClass="content-area">
+
+            <!-- KPIs -->
+            <HBox spacing="25" alignment="CENTER_LEFT">
+                <VBox styleClass="kpi-card, kpi-card-pending">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⏳" styleClass="kpi-icon"/>
+                        <Label text="En Attente" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelPending" text="0" styleClass="kpi-value"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-resolved">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="✅" styleClass="kpi-icon"/>
+                        <Label text="Résolues" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelResolved" text="0" styleClass="kpi-value"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-rejected">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="❌" styleClass="kpi-icon"/>
+                        <Label text="Rejetées" styleClass="kpi-label"/>
+                    </HBox>
+                    <Label fx:id="labelRejected" text="0" styleClass="kpi-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Filter bar -->
+            <HBox styleClass="filter-bar">
+                <Label text="🔍" styleClass="filter-icon"/>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher par sujet ou auteur..."
+                           prefWidth="280"
+                           styleClass="filter-search"/>
+                <ComboBox fx:id="statusFilter" prefWidth="160" promptText="Statut" styleClass="filter-combo"/>
+                <Button text="🔎 Filtrer" onAction="#applyFilter" styleClass="btn-filter"/>
+            </HBox>
+
+            <!-- Complaint cards -->
+            <ScrollPane fitToWidth="true" styleClass="scroll-transparent" VBox.vgrow="ALWAYS">
+                <VBox fx:id="complaintsContainer" spacing="15" style="-fx-padding: 5;"/>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

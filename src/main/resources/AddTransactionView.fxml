@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.services.AddTransactionController"
+      styleClass="form-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/forms.css"/>
+        <String fx:value="/styles/buttons.css"/>
+    </stylesheets>
+
+    <!-- Header -->
+    <VBox styleClass="form-header">
+        <Label text="💰" styleClass="form-header-icon"/>
+        <Label text="Nouvelle Transaction"          styleClass="form-header-title"/>
+        <Label text="Effectuez un virement sécurisé" styleClass="form-header-subtitle"/>
+    </VBox>
+
+    <!-- Form card -->
+    <VBox styleClass="form-card">
+
+        <!-- Destinataire -->
+        <VBox styleClass="form-field-group">
+            <Label text="👤 Destinataire *" styleClass="form-field-label"/>
+            <ComboBox fx:id="receiverCombo"
+                      promptText="Sélectionnez le destinataire"
+                      prefWidth="400"
+                      styleClass="form-combo"/>
+        </VBox>
+
+        <!-- Montant -->
+        <VBox styleClass="form-field-group">
+            <Label text="💵 Montant (TND) *" styleClass="form-field-label"/>
+            <TextField fx:id="amountField"
+                       promptText="Ex: 100.50"
+                       styleClass="form-input-lg"/>
+            <Label fx:id="amountErrorLabel" text="" styleClass="form-error"/>
+        </VBox>
+
+        <!-- Description -->
+        <VBox styleClass="form-field-group">
+            <Label text="📝 Description" styleClass="form-field-label"/>
+            <TextField fx:id="descriptionField"
+                       promptText="Ex: Paiement facture électricité"
+                       styleClass="form-input"/>
+        </VBox>
+
+        <!-- Type -->
+        <VBox styleClass="form-field-group">
+            <Label text="🏷️ Type de transaction *" styleClass="form-field-label"/>
+            <HBox spacing="10">
+                <ToggleButton fx:id="debitToggle"  text="💳 Débit"  styleClass="toggle-debit"/>
+                <ToggleButton fx:id="creditToggle" text="💰 Crédit" styleClass="toggle-credit"/>
+            </HBox>
+        </VBox>
+
+        <!-- Statut -->
+        <VBox styleClass="form-field-group">
+            <Label text="📊 Statut *" styleClass="form-field-label"/>
+            <ComboBox fx:id="statusBox"
+                      promptText="Sélectionnez le statut"
+                      prefWidth="400"
+                      styleClass="form-combo"/>
+        </VBox>
+
+        <Label text="💡 Tous les champs marqués d'un * sont obligatoires"
+               styleClass="form-tip"/>
+
+    </VBox>
+
+    <!-- Summary -->
+    <VBox fx:id="summaryBox" styleClass="form-summary" visible="false" managed="false">
+        <Label text="✅ Transaction prête"  styleClass="form-summary-title"/>
+        <Label fx:id="summaryLabel" text="" styleClass="form-summary-text"/>
+    </VBox>
+
+    <!-- Actions -->
+    <HBox styleClass="form-actions">
+        <Button text="❌ Annuler"    onAction="#cancel"          styleClass="btn-cancel"/>
+        <Button fx:id="submitButton"
+                text="✅ Confirmer"  onAction="#addTransaction"  styleClass="btn-submit"/>
+    </HBox>
+
+</VBox>

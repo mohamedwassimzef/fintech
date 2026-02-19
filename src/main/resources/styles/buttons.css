@@ -1,0 +1,141 @@
+/* ============================================================
+   buttons.css — Button styles
+   ============================================================ */
+
+/* ── Primary (yellow) ── */
+.btn-primary {
+    -fx-background-color: #facc15;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #eab308;
+}
+
+/* ── Secondary (slate) ── */
+.btn-secondary {
+    -fx-background-color: #475569;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #64748b;
+}
+
+/* ── PDF export (purple) ── */
+.btn-export {
+    -fx-background-color: #7c3aed;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}
+
+.btn-export:hover {
+    -fx-background-color: #6d28d9;
+}
+
+/* ── Blue (edit/action) ── */
+.btn-action {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.btn-action:hover {
+    -fx-background-color: #2563eb;
+}
+
+/* ── Red (delete/danger) ── */
+.btn-danger {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #dc2626;
+}
+
+/* ── Filter button ── */
+.btn-filter {
+    -fx-background-color: #facc15;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 22;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}
+
+.btn-filter:hover {
+    -fx-background-color: #eab308;
+}
+
+/* ── Toggle buttons (debit/credit) ── */
+.toggle-debit {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+.toggle-debit:selected { -fx-background-color: #ef4444; }
+
+.toggle-credit {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+.toggle-credit:selected { -fx-background-color: #22c55e; }
+
+/* ── Form buttons ── */
+.btn-submit {
+    -fx-background-color: #facc15;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-pref-width: 150px;
+}
+.btn-submit:hover { -fx-background-color: #eab308; }
+
+.btn-cancel {
+    -fx-background-color: #475569;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-pref-width: 150px;
+}
+.btn-cancel:hover { -fx-background-color: #64748b; }

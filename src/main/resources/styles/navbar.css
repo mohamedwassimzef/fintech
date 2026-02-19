@@ -1,0 +1,88 @@
+/* ============================================================
+   navbar.css — Sidebar / Navigation
+   ============================================================ */
+
+.sidebar {
+    -fx-background-color: #111827;
+    -fx-pref-width: 250px;
+    -fx-spacing: 15px;
+    -fx-padding: 30 20 20 20;
+}
+
+/* Logo block */
+.sidebar-logo {
+    -fx-background-color: #1e3a8a;
+    -fx-background-radius: 12px;
+    -fx-padding: 15px;
+    -fx-alignment: CENTER;
+    -fx-spacing: 5px;
+}
+
+.sidebar-logo-title {
+    -fx-text-fill: #facc15;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-logo-subtitle {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 10px;
+}
+
+/* User info block */
+.sidebar-user-card {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12px;
+    -fx-padding: 15px;
+    -fx-spacing: 8px;
+}
+
+.sidebar-username {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-role {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+/* Nav buttons */
+.nav-btn {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px;
+    -fx-pref-width: 210px;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #475569;
+}
+
+.nav-btn-active {
+    -fx-background-color: #1e3a8a;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px;
+    -fx-pref-width: 210px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Divider */
+.sidebar-separator {
+    -fx-background-color: #334155;
+}
+
+/* Version label */
+.sidebar-version {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 10px;
+}

@@ -1,0 +1,70 @@
+/* ============================================================
+   global.css — Design tokens & base rules
+   All other CSS files inherit from these variables.
+   ============================================================ */
+
+.root {
+    /* Colours */
+    -bg-primary:     #0f172a;
+    -bg-secondary:   #1e293b;
+    -bg-sidebar:     #111827;
+    -bg-card:        #1e293b;
+    -bg-input:       #0f172a;
+    -bg-navy:        #1e3a8a;
+
+    -accent-yellow:  #facc15;
+    -accent-purple:  #7c3aed;
+    -accent-blue:    #3b82f6;
+
+    -col-debit:      #7f1d1d;
+    -col-credit:     #064e3b;
+    -col-pending:    #fbbf24;
+    -col-resolved:   #22c55e;
+    -col-rejected:   #ef4444;
+
+    -text-primary:   white;
+    -text-secondary: #94a3b8;
+    -text-muted:     #64748b;
+    -text-light:     #cbd5e1;
+
+    -border-color:   #334155;
+    -radius-sm:      8px;
+    -radius-md:      12px;
+    -radius-lg:      15px;
+
+    /* Font sizes */
+    -fs-xs:   10px;
+    -fs-sm:   12px;
+    -fs-base: 13px;
+    -fs-md:   15px;
+    -fs-lg:   18px;
+    -fs-xl:   22px;
+    -fs-2xl:  24px;
+    -fs-3xl:  28px;
+    -fs-4xl:  36px;
+}
+
+/* Base app background */
+.app-root {
+    -fx-background-color: linear-gradient(to bottom, #0f172a, #1e293b);
+}
+
+/* Transparent scroll pane */
+.scroll-transparent {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.scroll-transparent .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-transparent .scroll-bar:vertical {
+    -fx-background-color: #1e293b;
+    -fx-pref-width: 8px;
+}
+
+.scroll-transparent .scroll-bar:vertical .thumb {
+    -fx-background-color: #334155;
+    -fx-background-radius: 4px;
+}

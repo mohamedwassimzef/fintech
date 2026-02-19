@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.services.EditComplaintController"
+      styleClass="form-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/forms.css"/>
+        <String fx:value="/styles/buttons.css"/>
+    </stylesheets>
+
+    <!-- Header -->
+    <VBox styleClass="form-header">
+        <Label text="✏️" styleClass="form-header-icon"/>
+        <Label text="Modifier la Réclamation"       styleClass="form-header-title"/>
+        <Label text="Modifiez le sujet de votre réclamation" styleClass="form-header-subtitle"/>
+    </VBox>
+
+    <!-- Info strip (read-only: ID + date) -->
+    <VBox styleClass="form-info-strip">
+        <Label fx:id="infoLabel" text="" styleClass="form-info-strip-label"/>
+    </VBox>
+
+    <!-- Form card -->
+    <VBox styleClass="form-card">
+
+        <VBox styleClass="form-field-group">
+            <Label text="📝 Sujet de la réclamation *" styleClass="form-field-label"/>
+            <TextArea fx:id="subjectArea"
+                      promptText="Modifiez le sujet..."
+                      prefRowCount="6"
+                      wrapText="true"
+                      styleClass="form-textarea"/>
+        </VBox>
+
+        <Label fx:id="charCountLabel" text="0 / 10 caractères minimum"
+               styleClass="form-char-count"/>
+
+        <Label fx:id="errorLabel" text="" styleClass="form-error"/>
+
+    </VBox>
+
+    <!-- Actions -->
+    <HBox styleClass="form-actions">
+        <Button text="❌ Annuler"     onAction="#cancel"          styleClass="btn-cancel"/>
+        <Button text="💾 Enregistrer" onAction="#saveComplaint"   styleClass="btn-submit"/>
+    </HBox>
+
+</VBox>

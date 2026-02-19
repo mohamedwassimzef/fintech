@@ -1,0 +1,130 @@
+/* ============================================================
+   cards.css — Transaction & Complaint cards
+   Applied programmatically in controllers via styleClass
+   ============================================================ */
+
+/* ── Base card ── */
+.card {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.card:hover {
+    -fx-background-color: #334155;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+/* ── Transaction cards ── */
+.card-debit {
+    -fx-background-color: #7f1d1d;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.card-debit:hover {
+    -fx-background-color: #991b1b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+.card-credit {
+    -fx-background-color: #064e3b;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.card-credit:hover {
+    -fx-background-color: #065f46;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+/* ── Card text ── */
+.card-id {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.card-subtitle {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 13px;
+}
+
+.card-meta {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+.card-amount {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.card-label-small {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 11px;
+}
+
+/* ── Status badges ── */
+.badge {
+    -fx-background-radius: 20px;
+    -fx-padding: 5 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-pending  { -fx-background-color: #fbbf24; -fx-text-fill: black;  }
+.badge-completed{ -fx-background-color: #22c55e; -fx-text-fill: white;  }
+.badge-resolved { -fx-background-color: #22c55e; -fx-text-fill: white;  }
+.badge-failed   { -fx-background-color: #ef4444; -fx-text-fill: white;  }
+.badge-rejected { -fx-background-color: #ef4444; -fx-text-fill: white;  }
+.badge-debit    { -fx-background-color: #dc2626; -fx-text-fill: white;  }
+.badge-credit   { -fx-background-color: #16a34a; -fx-text-fill: white;  }
+
+/* ── Response box inside complaint card ── */
+.card-response-box {
+    -fx-background-color: #0f172a;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+    -fx-spacing: 5px;
+}
+
+.card-response-title {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.card-response-text {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 12px;
+}
+
+/* ── Empty state ── */
+.empty-label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 16px;
+    -fx-padding: 50px;
+}

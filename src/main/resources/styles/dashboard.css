@@ -1,0 +1,51 @@
+/* ============================================================
+   dashboard.css — KPI cards & main content area
+   ============================================================ */
+
+.content-area {
+    -fx-padding: 30px;
+    -fx-spacing: 25px;
+}
+
+/* ── KPI Cards ── */
+.kpi-card {
+    -fx-background-radius: 15px;
+    -fx-padding: 25px;
+    -fx-spacing: 10px;
+    -fx-min-width: 210px;
+}
+
+.kpi-card-debit    { -fx-background-color: #ef4444; }
+.kpi-card-credit   { -fx-background-color: #22c55e; }
+.kpi-card-count    { -fx-background-color: #3b82f6; }
+.kpi-card-pending  { -fx-background-color: #fbbf24; }
+.kpi-card-resolved { -fx-background-color: #22c55e; }
+.kpi-card-rejected { -fx-background-color: #ef4444; }
+
+.kpi-icon {
+    -fx-font-size: 28px;
+}
+
+.kpi-label {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.kpi-value {
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.kpi-value-amount {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/* ── Stats panel ── */
+.stats-panel {
+    -fx-padding: 0;
+    -fx-spacing: 15px;
+}

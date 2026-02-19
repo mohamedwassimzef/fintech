@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.services.AddComplaintController"
+      styleClass="form-root">
+
+    <stylesheets>
+        <String fx:value="/styles/global.css"/>
+        <String fx:value="/styles/forms.css"/>
+        <String fx:value="/styles/buttons.css"/>
+    </stylesheets>
+
+    <!-- Header -->
+    <VBox styleClass="form-header">
+        <Label text="📮" styleClass="form-header-icon"/>
+        <Label text="Nouvelle Réclamation"              styleClass="form-header-title"/>
+        <Label text="Décrivez votre problème en détail" styleClass="form-header-subtitle"/>
+    </VBox>
+
+    <!-- Form card -->
+    <VBox styleClass="form-card">
+
+        <VBox styleClass="form-field-group">
+            <Label text="📝 Sujet de la réclamation *" styleClass="form-field-label"/>
+            <TextArea fx:id="subjectArea"
+                      promptText="Décrivez votre réclamation (minimum 10 caractères)..."
+                      prefRowCount="6"
+                      wrapText="true"
+                      styleClass="form-textarea"/>
+        </VBox>
+
+        <Label text="💡 Conseil: Soyez précis et détaillé pour obtenir une réponse rapide"
+               styleClass="form-tip"/>
+
+        <Label fx:id="charCountLabel" text="0 / 10 caractères minimum"
+               styleClass="form-char-count"/>
+
+    </VBox>
+
+    <!-- Actions -->
+    <HBox styleClass="form-actions">
+        <Button text="❌ Annuler"   onAction="#cancel"       styleClass="btn-cancel"/>
+        <Button text="✅ Soumettre" onAction="#addComplaint" styleClass="btn-submit"/>
+    </HBox>
+
+</VBox>
