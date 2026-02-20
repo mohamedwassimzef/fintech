@@ -1,35 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  Improved UI Layout – Asset Manager
+  Paired with styles.css dark theme
 -->
 
 <?import javafx.scene.control.Button?>
@@ -46,163 +19,282 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="810.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" VBox.vgrow="ALWAYS">
-      <children>
-            <TabPane fx:id="mainTabs" prefHeight="785.0" prefWidth="847.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab fx:id="assetFormTab" text="Untitled Tab 1">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="560.0" prefWidth="491.0">
-                           <children>
-                              <VBox layoutX="64.0" layoutY="124.0" prefHeight="276.0" prefWidth="271.0">
-                                 <children>
-                                    <Label text="name" />
-                                    <TextField fx:id="AssName" />
-                                    <Label text="Type" />
-                                    <TextField fx:id="AssType" />
-                                    <Label text="Value" />
-                                    <TextField fx:id="AssValue" />
-                                    <Label text="Description" />
-                                    <TextField fx:id="AssDesc" />
-                                    <Label text="Created at " />
-                                    <DatePicker fx:id="AssCreated" prefHeight="25.0" prefWidth="269.0" />
-                                    <Label text="User ID" />
-                                    <TextField fx:id="AssUser" />
-                                    <Button fx:id="SubAsset" mnemonicParsing="false" onAction="#handleSubmitButton" text="Submit" />
-                                 </children>
-                              </VBox>
-                           </children>
+<VBox prefHeight="710.0" prefWidth="760.0" stylesheets="@styles.css"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.MainController">
+    <children>
+
+        <!-- ── Menu Bar ──────────────────────────────────────── -->
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As…" />
+                        <MenuItem mnemonicParsing="false" text="Revert" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cut" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Select All" />
+                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+
+        <!-- ── Tab Pane ──────────────────────────────────────── -->
+        <TabPane fx:id="mainTabs" tabClosingPolicy="UNAVAILABLE"
+                 VBox.vgrow="ALWAYS">
+            <tabs>
+
+                <!-- ─ Asset Form Tab ───────────────────────────── -->
+                <Tab fx:id="assetFormTab" text="Asset Form">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <VBox styleClass="form-container"
+                                      AnchorPane.topAnchor="40.0"
+                                      AnchorPane.leftAnchor="60.0"
+                                      AnchorPane.rightAnchor="60.0"
+                                      AnchorPane.bottomAnchor="40.0"
+                                      maxWidth="420.0"
+                                      spacing="2.0">
+                                    <children>
+                                        <Label text="NAME" />
+                                        <TextField fx:id="AssName" promptText="e.g. Company Vehicle" />
+
+                                        <Label text="TYPE" />
+                                        <TextField fx:id="AssType" promptText="e.g. Vehicle, Property…" />
+
+                                        <Label text="VALUE" />
+                                        <TextField fx:id="AssValue" promptText="0.00" />
+
+                                        <Label text="DESCRIPTION" />
+                                        <TextField fx:id="AssDesc" promptText="Short description" />
+
+
+                                        <Label text="USER ID" />
+                                        <TextField fx:id="AssUser" promptText="User identifier" />
+
+                                        <Label text="CREATED AT" visible="false" />
+                                        <DatePicker fx:id="AssCreated" visible="false" prefWidth="356.0" />
+
+                                        <Region prefHeight="12.0" />
+
+                                        <Button fx:id="SubAsset" text="Submit Asset"
+                                                mnemonicParsing="false"
+                                                onAction="#handleSubmitButton"
+                                                prefWidth="356.0" />
+                                    </children>
+                                </VBox>
+                            </children>
                         </AnchorPane>
-                  </content>
+                    </content>
                 </Tab>
+
+                <!-- ─ Asset List Tab ───────────────────────────── -->
                 <Tab fx:id="assetListTab" text="Asset List">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TableView fx:id="assetsTable" layoutX="86.0" layoutY="57.0" prefHeight="398.0" prefWidth="675.0">
-                                <columns>
-                                  <TableColumn fx:id="colId" prefWidth="60.0" text="ID" visible="false" />
-                                  <TableColumn fx:id="colName" prefWidth="120.0" text="Name" />
-                                  <TableColumn fx:id="colType" prefWidth="90.0" text="Type" />
-                                  <TableColumn fx:id="colValue" prefWidth="90.0" text="Value" />
-                                  <TableColumn fx:id="colDescription" prefWidth="150.0" text="Description" />
-                                  <TableColumn fx:id="colCreatedAt" prefWidth="140.0" text="Created At" />
-                                  <TableColumn fx:id="colUserId" prefWidth="80.0" text="User ID" />
-                                </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
-                              <Button fx:id="updateAssetButton" layoutX="223.0" layoutY="593.0" mnemonicParsing="false" text="Update" disable="true" onAction="#handleUpdateAssetButton" />
-                              <Button fx:id="deleteAssetButton" layoutX="522.0" layoutY="593.0" mnemonicParsing="false" text="Delete" disable="true" onAction="#handleDeleteAssetButton" />
-                           </children>
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <TableView fx:id="assetsTable"
+                                           AnchorPane.topAnchor="30.0"
+                                           AnchorPane.leftAnchor="40.0"
+                                           AnchorPane.rightAnchor="40.0"
+                                           AnchorPane.bottomAnchor="70.0">
+                                    <columns>
+                                        <TableColumn fx:id="colId" prefWidth="60.0" text="ID" visible="false" />
+                                        <TableColumn fx:id="colName" prefWidth="140.0" text="Name" />
+                                        <TableColumn fx:id="colType" prefWidth="100.0" text="Type" />
+                                        <TableColumn fx:id="colValue" prefWidth="100.0" text="Value" />
+                                        <TableColumn fx:id="colDescription" prefWidth="160.0" text="Description" />
+                                        <TableColumn fx:id="colCreatedAt" prefWidth="140.0" text="Created At" />
+                                        <TableColumn fx:id="colUserId" prefWidth="80.0" text="User ID" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+
+                                <!-- Action buttons row -->
+                                <HBox spacing="12.0"
+                                      AnchorPane.bottomAnchor="14.0"
+                                      AnchorPane.leftAnchor="40.0"
+                                      AnchorPane.rightAnchor="40.0">
+                                    <children>
+                                        <Button fx:id="updateAssetButton" disable="true"
+                                                mnemonicParsing="false"
+                                                onAction="#handleUpdateAssetButton"
+                                                text="Update Asset"
+                                                prefWidth="180.0" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="deleteAssetButton" disable="true"
+                                                mnemonicParsing="false"
+                                                onAction="#handleDeleteAssetButton"
+                                                text="Delete Asset"
+                                                prefWidth="180.0" />
+                                    </children>
+                                </HBox>
+                            </children>
                         </AnchorPane>
-                  </content>
+                    </content>
                 </Tab>
+
+                <!-- ─ Contract Form Tab ────────────────────────── -->
                 <Tab fx:id="contractFormTab" text="Contract Form">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="560.0" prefWidth="491.0">
-                           <children>
-                              <VBox layoutX="64.0" layoutY="84.0" prefHeight="420.0" prefWidth="320.0">
-                                 <children>
-                                    <Label text="Contract Number" />
-                                    <TextField fx:id="contractNumberField" />
-                                    <Label text="Asset ID" />
-                                    <TextField fx:id="contractAssetIdField" />
-                                    <Label text="User ID" />
-                                    <TextField fx:id="contractUserIdField" />
-                                    <Label text="Start Date" />
-                                    <DatePicker fx:id="contractStartDatePicker" />
-                                    <Label text="End Date" />
-                                    <DatePicker fx:id="contractEndDatePicker" />
-                                    <Label text="Premium Amount" />
-                                    <TextField fx:id="contractPremiumField" />
-                                    <Label text="Coverage Amount" />
-                                    <TextField fx:id="contractCoverageField" />
-                                    <Label text="Status" />
-                                    <ComboBox fx:id="contractStatusCombo" />
-                                    <Label text="Approved By" />
-                                    <TextField fx:id="contractApprovedByField" />
-                                    <Button fx:id="contractSubmitButton" mnemonicParsing="false" onAction="#handleContractSubmitButton" text="Submit" />
-                                 </children>
-                              </VBox>
-                           </children>
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <VBox styleClass="form-container"
+                                      AnchorPane.topAnchor="40.0"
+                                      AnchorPane.leftAnchor="60.0"
+                                      AnchorPane.rightAnchor="60.0"
+                                      AnchorPane.bottomAnchor="40.0"
+                                      maxWidth="420.0"
+                                      spacing="2.0">
+                                    <children>
+                                        <Label text="CONTRACT NUMBER" />
+                                        <TextField fx:id="contractNumberField" promptText="e.g. CNT-2025-001" />
+
+                                        <Label text="ASSET ID" />
+                                        <TextField fx:id="contractAssetIdField" promptText="Asset identifier" />
+
+                                        <Label text="USER ID" />
+                                        <TextField fx:id="contractUserIdField" promptText="User identifier" />
+
+                                        <HBox spacing="16.0">
+                                            <children>
+                                                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                                                    <children>
+                                                        <Label text="START DATE" />
+                                                        <DatePicker fx:id="contractStartDatePicker" maxWidth="Infinity" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                                                    <children>
+                                                        <Label text="END DATE" />
+                                                        <DatePicker fx:id="contractEndDatePicker" maxWidth="Infinity" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <HBox spacing="16.0">
+                                            <children>
+                                                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                                                    <children>
+                                                        <Label text="PREMIUM AMOUNT" />
+                                                        <TextField fx:id="contractPremiumField" promptText="0.00" maxWidth="Infinity" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox HBox.hgrow="ALWAYS" spacing="2.0">
+                                                    <children>
+                                                        <Label text="COVERAGE AMOUNT" />
+                                                        <TextField fx:id="contractCoverageField" promptText="0.00" maxWidth="Infinity" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+
+                                        <Label text="STATUS" />
+                                        <ComboBox fx:id="contractStatusCombo" maxWidth="Infinity" />
+
+                                        <Label text="APPROVED BY" />
+                                        <TextField fx:id="contractApprovedByField" promptText="Approver name or ID" />
+
+                                        <Region prefHeight="12.0" />
+
+                                        <Button fx:id="contractSubmitButton" text="Submit Contract"
+                                                mnemonicParsing="false"
+                                                onAction="#handleContractSubmitButton"
+                                                prefWidth="356.0" maxWidth="Infinity" />
+                                    </children>
+                                </VBox>
+                            </children>
                         </AnchorPane>
-                  </content>
+                    </content>
                 </Tab>
+
+                <!-- ─ Contract List Tab ────────────────────────── -->
                 <Tab fx:id="contractListTab" text="Contract List">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TableView fx:id="contractsTable" layoutX="42.0" layoutY="40.0" prefHeight="420.0" prefWidth="760.0">
-                                <columns>
-                                  <TableColumn fx:id="contractColId" prefWidth="60.0" text="ID" visible="false" />
-                                  <TableColumn fx:id="contractColNumber" prefWidth="120.0" text="Number" />
-                                  <TableColumn fx:id="contractColAssetId" prefWidth="80.0" text="Asset" />
-                                  <TableColumn fx:id="contractColUserId" prefWidth="80.0" text="User" />
-                                  <TableColumn fx:id="contractColStart" prefWidth="100.0" text="Start" />
-                                  <TableColumn fx:id="contractColEnd" prefWidth="100.0" text="End" />
-                                  <TableColumn fx:id="contractColPremium" prefWidth="110.0" text="Premium" />
-                                  <TableColumn fx:id="contractColCoverage" prefWidth="120.0" text="Coverage" />
-                                  <TableColumn fx:id="contractColStatus" prefWidth="90.0" text="Status" />
-                                  <TableColumn fx:id="contractColApprovedBy" prefWidth="90.0" text="Approved" />
-                                </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
-                              <Button fx:id="contractUpdateButton" layoutX="230.0" layoutY="590.0" mnemonicParsing="false" text="Update" disable="true" onAction="#handleContractUpdateButton" />
-                              <Button fx:id="contractDeleteButton" layoutX="520.0" layoutY="590.0" mnemonicParsing="false" text="Delete" disable="true" onAction="#handleContractDeleteButton" />
-                           </children>
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <TableView fx:id="contractsTable"
+                                           AnchorPane.topAnchor="30.0"
+                                           AnchorPane.leftAnchor="40.0"
+                                           AnchorPane.rightAnchor="40.0"
+                                           AnchorPane.bottomAnchor="70.0">
+                                    <columns>
+                                        <TableColumn fx:id="contractColId" prefWidth="60.0" text="ID" visible="false" />
+                                        <TableColumn fx:id="contractColNumber" prefWidth="120.0" text="Number" />
+                                        <TableColumn fx:id="contractColAssetId" prefWidth="80.0" text="Asset" />
+                                        <TableColumn fx:id="contractColUserId" prefWidth="80.0" text="User" />
+                                        <TableColumn fx:id="contractColStart" prefWidth="100.0" text="Start" />
+                                        <TableColumn fx:id="contractColEnd" prefWidth="100.0" text="End" />
+                                        <TableColumn fx:id="contractColPremium" prefWidth="110.0" text="Premium" />
+                                        <TableColumn fx:id="contractColCoverage" prefWidth="110.0" text="Coverage" />
+                                        <TableColumn fx:id="contractColStatus" prefWidth="90.0" text="Status" />
+                                        <TableColumn fx:id="contractColApprovedBy" prefWidth="100.0" text="Approved By" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+
+                                <HBox spacing="12.0"
+                                      AnchorPane.bottomAnchor="14.0"
+                                      AnchorPane.leftAnchor="40.0"
+                                      AnchorPane.rightAnchor="40.0">
+                                    <children>
+                                        <Button fx:id="contractUpdateButton" disable="true"
+                                                mnemonicParsing="false"
+                                                onAction="#handleContractUpdateButton"
+                                                text="Update Contract"
+                                                prefWidth="180.0" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="contractDeleteButton" disable="true"
+                                                mnemonicParsing="false"
+                                                onAction="#handleContractDeleteButton"
+                                                text="Delete Contract"
+                                                prefWidth="180.0" />
+                                    </children>
+                                </HBox>
+                            </children>
                         </AnchorPane>
-                  </content>
+                    </content>
                 </Tab>
-              </tabs>
-            </TabPane>
-      </children>
-    </AnchorPane>
-  </children>
+
+            </tabs>
+        </TabPane>
+
+    </children>
 </VBox>

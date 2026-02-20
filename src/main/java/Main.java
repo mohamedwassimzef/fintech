@@ -12,6 +12,12 @@ public class Main extends Application {
         );
 
         Scene scene = new Scene(loader.load());
+
+        // Apply stylesheet to scene
+        scene.getStylesheets().add(
+            getClass().getResource("/View/styles.css").toExternalForm()
+        );
+
         stage.setScene(scene);
         stage.setTitle("CRUD App");
         stage.show();

@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import tn.esprit.dao.InsuredAssetDAO;
 import tn.esprit.dao.InsuredContractDAO;
@@ -26,6 +27,7 @@ import tn.esprit.enums.ContractStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class MainController {
 
@@ -215,6 +217,8 @@ public class MainController {
 
         refreshAssetsTable();
         setEditMode(false);
+
+        applyInputControls();
     }
 
     private void setupContractTable() {
@@ -490,10 +494,19 @@ public class MainController {
             String coverageText = contractCoverageField.getText().trim();
             ContractStatus status = contractStatusCombo.getValue();
 
+            // Validate required fields
             if (contractNumber.isEmpty() || assetIdText.isEmpty() || userIdText.isEmpty() ||
                 premiumText.isEmpty() || coverageText.isEmpty() || status == null) {
                 showAlert(AlertType.ERROR, "Validation Error",
                          "Please fill in all required fields.");
+                return;
+            }
+
+            LocalDate startDate = contractStartDatePicker.getValue();
+            LocalDate endDate = contractEndDatePicker.getValue();
+
+            if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+                showAlert(AlertType.ERROR, "Validation Error", "End date must be after start date.");
                 return;
             }
 
@@ -512,6 +525,7 @@ public class MainController {
                 return;
             }
 
+            // Parse optional Approved By
             Integer approvedBy = null;
             String approvedByText = contractApprovedByField.getText().trim();
             if (!approvedByText.isEmpty()) {
@@ -523,9 +537,7 @@ public class MainController {
                 }
             }
 
-            LocalDate startDate = contractStartDatePicker.getValue();
-            LocalDate endDate = contractEndDatePicker.getValue();
-
+            // Verify asset and user exist
             InsuredAssetDAO assetDAO = new InsuredAssetDAO();
             if (assetDAO.read(assetId) == null) {
                 showAlert(AlertType.ERROR, "Asset Not Found", "Asset ID does not exist.");
@@ -533,14 +545,23 @@ public class MainController {
             }
 
             UserDAO userDAO = new UserDAO();
+            // Verify main contract user exists
             if (userDAO.read(userId) == null) {
                 showAlert(AlertType.ERROR, "User Not Found", "User ID does not exist.");
+                return;
+            }
+
+            // Verify Approved By user exists when provided to avoid FK violation
+            if (approvedBy != null && userDAO.read(approvedBy) == null) {
+                showAlert(AlertType.ERROR, "User Not Found",
+                         "Approved By user ID " + approvedBy + " does not exist.");
                 return;
             }
 
             InsuredContractDAO contractDAO = new InsuredContractDAO();
             boolean success;
 
+            // contractNumber is passed directly as String
             if (isContractEditMode) {
                 if (selectedContract == null) {
                     showAlert(AlertType.WARNING, "No Selection", "Please double-click a contract first.");
@@ -665,5 +686,54 @@ public class MainController {
         contractStatusCombo.setValue(null);
         contractApprovedByField.clear();
         setContractEditMode(false);
+    }
+
+    private void applyInputControls() {
+        // Asset fields
+        applyDecimalOnly(AssValue);
+        applyIntegerOnly(AssUser);
+
+        // Contract fields
+        // Contract number back to alphanumeric with dash/underscore (string-based IDs)
+        applyAlphanumericWithDash(contractNumberField);
+        applyIntegerOnly(contractAssetIdField);
+        applyIntegerOnly(contractUserIdField);
+        applyDecimalOnly(contractPremiumField);
+        applyDecimalOnly(contractCoverageField);
+        applyIntegerOnly(contractApprovedByField);
+    }
+
+    private void applyIntegerOnly(TextField field) {
+        if (field == null) {
+            return;
+        }
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
+            return text.matches("\\d*") ? change : null;
+        };
+        field.setTextFormatter(new TextFormatter<>(filter));
+    }
+
+    private void applyDecimalOnly(TextField field) {
+        if (field == null) {
+            return;
+        }
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
+            return text.matches("\\d*(\\.\\d*)?") ? change : null;
+        };
+        field.setTextFormatter(new TextFormatter<>(filter));
+    }
+
+    private void applyAlphanumericWithDash(TextField field) {
+        if (field == null) {
+            return;
+        }
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getControlNewText();
+            // Allow letters, numbers, dashes, and underscores for contract numbers
+            return text.matches("[A-Za-z0-9\\-_]*") ? change : null;
+        };
+        field.setTextFormatter(new TextFormatter<>(filter));
     }
 }
