@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.CurrencyConverterController"
+            style="-fx-background-color: #1a1a2e;">
+
+    <top>
+        <VBox>
+            <HBox spacing="10" style="-fx-background-color: #16213e; -fx-padding: 15;">
+                <Label text="FinanceIQ" style="-fx-text-fill: #f0b429; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Home" onAction="#showWelcome" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Budgets" onAction="#showBudgets" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Expenses" onAction="#showExpenses" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Converter" onAction="#showConverter" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Bills" onAction="#showBills" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="🔔" onAction="#toggleNotifications" style="-fx-background-color: #e94560; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="30" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #1a1a2e;">
+
+            <Label text="Currency Converter" style="-fx-text-fill: #f0b429; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+
+            <VBox spacing="20" alignment="CENTER" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 40;" prefWidth="500">
+
+                <VBox spacing="5">
+                    <Label text="Amount" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                    <TextField fx:id="amountField" promptText="Enter amount" style="-fx-font-size: 16px; -fx-padding: 10; -fx-background-color: #0f3460; -fx-text-fill: white; -fx-prompt-text-fill: #a0a0b0; -fx-background-radius: 8;" prefWidth="400"/>
+                </VBox>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox spacing="5">
+                        <Label text="From" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                        <ComboBox fx:id="fromCurrency" prefWidth="180" style="-fx-font-size: 14px;"/>
+                    </VBox>
+
+                    <Label text="to" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+
+                    <VBox spacing="5">
+                        <Label text="To" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                        <ComboBox fx:id="toCurrency" prefWidth="180" style="-fx-font-size: 14px;"/>
+                    </VBox>
+                </HBox>
+
+                <Button text="Convert" onAction="#handleConvert" prefWidth="400" prefHeight="45" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+
+                <VBox spacing="5" alignment="CENTER">
+                    <Label fx:id="resultLabel" text="" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #4ecca3;"/>
+                    <Label fx:id="errorLabel" text="" style="-fx-text-fill: #e94560; -fx-font-size: 13px;"/>
+                    <Label fx:id="rateLabel" text="" style="-fx-text-fill: #a0a0b0; -fx-font-size: 12px;"/>
+                </VBox>
+
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -6,71 +6,96 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.controllers.WelcomeScreenController"
-            style="-fx-background-color: #667eea;">
+            style="-fx-background-color: #1a1a2e;">
 
     <top>
-        <HBox spacing="10" style="-fx-background-color: #5568d3; -fx-padding: 15;">
-            <Label text="Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Home" onAction="#showWelcome"
-                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
-            <Button text="Budgets" onAction="#showBudgets"
-                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
-            <Button text="Expenses" onAction="#showExpenses"
-                    style="-fx-background-color: #7c8fd9; -fx-text-fill: white;"/>
-        </HBox>
+        <VBox>
+            <HBox spacing="10" style="-fx-background-color: #16213e; -fx-padding: 15;">
+                <Label text="Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Home" onAction="#showWelcome" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-cursor: hand;"/>
+                <Button text="Budgets" onAction="#showBudgets" style="-fx-background-color: #16213e; -fx-text-fill: white; -fx-cursor: hand;"/>
+                <Button text="Expenses" onAction="#showExpenses" style="-fx-background-color: #16213e; -fx-text-fill: white; -fx-cursor: hand;"/>
+                <Button text="Converter" onAction="#showConverter" style="-fx-background-color: #16213e; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                <Button text="Bills" onAction="#showBills" style="-fx-background-color: #16213e; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="🔔" onAction="#showNotifications" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            </HBox>
+        </VBox>
     </top>
 
     <center>
-        <VBox spacing="20" style="-fx-padding: 30;">
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #1a1a2e;">
 
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="Welcome Back!" style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
-                <Label fx:id="dateLabel" style="-fx-text-fill: white; -fx-font-size: 16px;"/>
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Welcome Back!" style="-fx-text-fill: #f0b429; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                    <Label fx:id="dateLabel" style="-fx-text-fill: #a0a0b0; -fx-font-size: 16px;"/>
+                </VBox>
+
+                <HBox spacing="15" alignment="CENTER">
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="200" prefHeight="120" alignment="CENTER">
+                        <Label text="Total Budgets" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                        <Label fx:id="totalBudgetsLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                        <Label fx:id="totalBudgetAmountLabel" text="0.00" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="200" prefHeight="120" alignment="CENTER">
+                        <Label text="Total Spent" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                        <Label fx:id="totalSpentLabel" text="0.00" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #e94560;"/>
+                        <Label fx:id="expenseCountLabel" text="0 expenses" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="200" prefHeight="120" alignment="CENTER">
+                        <Label text="Remaining" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                        <Label fx:id="remainingLabel" text="0.00" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #4ecca3;"/>
+                        <Label fx:id="percentageLabel" text="0 percent used" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="200" prefHeight="120" alignment="CENTER">
+                        <Label text="Health Score" style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                        <Label fx:id="healthScoreLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                        <Label fx:id="healthStatusLabel" text="Calculating..." style="-fx-font-size: 13px; -fx-text-fill: #a0a0b0;"/>
+                    </VBox>
+
+                    <VBox fx:id="notifPanel" spacing="0" style="-fx-background-color: #16213e; -fx-background-radius: 10;" managed="false" visible="false" maxWidth="350" translateX="600">
+                        <Label text="Notifications" style="-fx-text-fill: #f0b429; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 15 20;"/>
+                        <Separator/>
+                        <VBox fx:id="notifList" spacing="0"/>
+                        <Label text="No notifications" fx:id="emptyNotifLabel" style="-fx-text-fill: #a0a0b0; -fx-font-size: 13px; -fx-padding: 20;" alignment="CENTER"/>
+                    </VBox>
+                </HBox>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="400" alignment="CENTER">
+                        <Label text="Spending by Category" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                        <PieChart fx:id="categoryPieChart" prefHeight="300" prefWidth="350" legendVisible="true"/>
+                    </VBox>
+
+                    <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;" prefWidth="400" prefHeight="350">
+                        <Label text="Budget Status" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                            <VBox fx:id="budgetStatusContainer" spacing="10"/>
+                        </ScrollPane>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="10" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 20;">
+                    <Label text="Spending Pattern Detector" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                    <VBox fx:id="patternContainer" spacing="8"/>
+                </VBox>
+
             </VBox>
-
-            <HBox spacing="20" alignment="CENTER">
-
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
-                      prefWidth="250" prefHeight="120" alignment="CENTER">
-                    <Label text="Total Budgets" style="-fx-font-size: 14px;"/>
-                    <Label fx:id="totalBudgetsLabel" text="0" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
-                    <Label fx:id="totalBudgetAmountLabel" text="0.00" style="-fx-font-size: 14px;"/>
-                </VBox>
-
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
-                      prefWidth="250" prefHeight="120" alignment="CENTER">
-                    <Label text="Total Spent" style="-fx-font-size: 14px;"/>
-                    <Label fx:id="totalSpentLabel" text="0.00" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #f44336;"/>
-                    <Label fx:id="expenseCountLabel" text="0 expenses" style="-fx-font-size: 14px;"/>
-                </VBox>
-
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
-                      prefWidth="250" prefHeight="120" alignment="CENTER">
-                    <Label text="Remaining" style="-fx-font-size: 14px;"/>
-                    <Label fx:id="remainingLabel" text="0.00" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
-                    <Label fx:id="percentageLabel" text="0 percent used" style="-fx-font-size: 14px;"/>
-                </VBox>
-            </HBox>
-
-            <HBox spacing="20" alignment="CENTER">
-
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
-                      prefWidth="400" alignment="CENTER">
-                    <Label text="Spending by Category" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <PieChart fx:id="categoryPieChart" prefHeight="300" prefWidth="350" legendVisible="true"/>
-                </VBox>
-
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;"
-                      prefWidth="400" prefHeight="350">
-                    <Label text="Budget Status" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <VBox fx:id="budgetStatusContainer" spacing="10"/>
-                    </ScrollPane>
-                </VBox>
-            </HBox>
-
-        </VBox>
+        </ScrollPane>
     </center>
+
+    <bottom>
+        <HBox style="-fx-background-color: #16213e; -fx-padding: 12;" alignment="CENTER_LEFT" spacing="15">
+            <Label text="FINANCE NEWS" style="-fx-text-fill: #1a1a2e; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-color: #f0b429; -fx-padding: 5 10; -fx-background-radius: 5;"/>
+            <Label text=">" style="-fx-text-fill: #f0b429; -fx-font-size: 14px;"/>
+            <Pane HBox.hgrow="ALWAYS" fx:id="tickerPane" prefHeight="30">
+                <Label fx:id="newsTicker" text="Loading financial news..." style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+            </Pane>
+        </HBox>
+    </bottom>
 
 </BorderPane>

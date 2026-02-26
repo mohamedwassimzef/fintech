@@ -274,4 +274,30 @@ public class BudgetManagementController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    @FXML
+    private void showConverter() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CurrencyConverter.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) budgetTable.getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 750));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void showBills() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BillManagement.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) budgetTable.getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 750));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void toggleNotifications() {}
 }

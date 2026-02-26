@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.BillManagementController"
+            style="-fx-background-color: #1a1a2e;">
+
+    <top>
+        <VBox>
+            <HBox spacing="10" style="-fx-background-color: #16213e; -fx-padding: 15;">
+                <Label text="FinanceIQ" style="-fx-text-fill: #f0b429; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Home" onAction="#showWelcome" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Budgets" onAction="#showBudgets" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Expenses" onAction="#showExpenses" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Converter" onAction="#showConverter" style="-fx-background-color: #0f3460; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="Bills" onAction="#showBills" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+                <Button text="🔔" onAction="#toggleNotifications" style="-fx-background-color: #e94560; -fx-text-fill: white; -fx-font-size: 20px; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #1a1a2e;">
+
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <VBox spacing="5">
+                        <Label text="Bill Reminder" style="-fx-text-fill: #f0b429; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+                        <Label text="Track and manage your recurring bills" style="-fx-text-fill: #a0a0b0; -fx-font-size: 14px;"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Add New Bill" onAction="#handleAddBill" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8;"/>
+                </HBox>
+
+                <Label text="Rest of content will go here..." style="-fx-text-fill: white;"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

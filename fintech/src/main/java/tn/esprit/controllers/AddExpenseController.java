@@ -140,4 +140,7 @@ public class AddExpenseController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public void prefillAmount(String amount) {
+        amountField.setText(amount);
+    }
 }
