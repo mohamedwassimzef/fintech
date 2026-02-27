@@ -44,6 +44,7 @@ public class TransactionController implements Initializable {
     @FXML private ComboBox<String> statusFilter;
     @FXML private ComboBox<String> typeFilter;
     @FXML private Button btnComplaints;
+    @FXML private Button btnAI;          // ← Analyse IA
     @FXML private VBox statsPanel;       // container injected from FXML
 
     private final TransactionService transactionService = new TransactionService();
@@ -220,18 +221,12 @@ public class TransactionController implements Initializable {
 
     // ── Statistics chart ───────────────────────────────────────────────────────
 
-    /**
-     * Draws a simple bar chart directly on a Canvas.
-     * Bars represent counts per status (pending / completed / failed)
-     * and a type breakdown (debit / credit).
-     */
     private void buildStatsChart() {
         if (statsPanel == null) return;
         statsPanel.getChildren().clear();
 
         if (allTransactions.isEmpty()) return;
 
-        // Compute directly from the already-filtered list — never query the whole DB
         int pending = 0, completed = 0, failed = 0, debit = 0, credit = 0;
         for (Transaction t : allTransactions) {
             switch (t.getStatus().toLowerCase()) {
@@ -278,7 +273,6 @@ public class TransactionController implements Initializable {
         Canvas canvas = new Canvas(canvasW, canvasH);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Transparent background
         gc.clearRect(0, 0, canvasW, canvasH);
 
         int    n       = labels.length;
@@ -296,21 +290,17 @@ public class TransactionController implements Initializable {
             double barH = (values[i] / maxVal) * maxBarH;
             double y    = canvasH - 22 - barH;
 
-            // Subtle bar background track
             gc.setFill(Color.web("#334155"));
             gc.fillRoundRect(x, canvasH - 22 - maxBarH, barW, maxBarH, 4, 4);
 
-            // Actual bar
             gc.setFill(colors[i]);
             gc.fillRoundRect(x, y, barW, barH, 4, 4);
 
-            // Value above
             gc.setFill(Color.WHITE);
             gc.setFont(Font.font("System", FontWeight.BOLD, 11));
             String valStr = String.valueOf(values[i]);
             gc.fillText(valStr, x + barW / 2 - valStr.length() * 3.5, y - 3);
 
-            // Label below
             gc.setFill(Color.web("#64748b"));
             gc.setFont(Font.font("System", 10));
             gc.fillText(labels[i], x + barW / 2 - labels[i].length() * 2.8, canvasH - 5);
@@ -344,8 +334,6 @@ public class TransactionController implements Initializable {
         displayTransactionsAsCards(filtered);
     }
 
-    // ── Add transaction modal ──────────────────────────────────────────────────
-
     @FXML
     private void openAddTransactionView() {
         try {
@@ -361,8 +349,6 @@ public class TransactionController implements Initializable {
             showError("Erreur ouverture formulaire : " + e.getMessage());
         }
     }
-
-    // ── Edit modal ─────────────────────────────────────────────────────────────
 
     private void openEditModal(Transaction transaction) {
         try {
@@ -395,8 +381,6 @@ public class TransactionController implements Initializable {
             }
         }
     }
-
-    // ── PDF Export ─────────────────────────────────────────────────────────────
 
     @FXML
     private void exportToPdf() {
@@ -432,8 +416,6 @@ public class TransactionController implements Initializable {
         }
     }
 
-    // ── Navigation ─────────────────────────────────────────────────────────────
-
     @FXML
     private void navigateToComplaints() {
         try {
@@ -444,6 +426,20 @@ public class TransactionController implements Initializable {
             stage.setTitle("FINTECH - Réclamations");
         } catch (IOException e) {
             showError("Erreur navigation : " + e.getMessage());
+        }
+    }
+
+    // ── Navigation IA ────────────────────────────────────────────────────────────
+    @FXML
+    private void navigateToAI() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AIAnalysisView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnComplaints.getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 700));
+            stage.setTitle("FINTECH - 🤖 Analyse IA");
+        } catch (IOException e) {
+            showError("Erreur navigation IA : " + e.getMessage());
         }
     }
 

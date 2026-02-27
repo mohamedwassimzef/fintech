@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.services.PaymentController"
+      prefWidth="500" prefHeight="580"
+      spacing="0"
+      style="-fx-background-color: #0f172a;">
+
+    <!-- EN-TÊTE -->
+    <VBox alignment="CENTER" spacing="5"
+          style="-fx-background-color: #1e293b; -fx-padding: 20;">
+        <Label text="💳 Paiement Paymee"
+               style="-fx-text-fill: #f59e0b; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <Label text="Sandbox — Paymee.tn"
+               style="-fx-text-fill: #475569; -fx-font-size: 11px;"/>
+    </VBox>
+
+    <ScrollPane fitToWidth="true"
+                style="-fx-background: #0f172a; -fx-background-color: #0f172a;"
+                VBox.vgrow="ALWAYS">
+        <VBox spacing="13" style="-fx-padding: 16;">
+
+            <!-- RÉCAPITULATIF -->
+            <VBox spacing="9"
+                  style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-padding: 16;">
+                <Label text="📋 Récapitulatif"
+                       style="-fx-text-fill: #64748b; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="💵 Montant :"     style="-fx-text-fill: #94a3b8;" prefWidth="120"/>
+                    <Label fx:id="labelAmount"     style="-fx-text-fill: #f59e0b; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="👤 Destinataire :" style="-fx-text-fill: #94a3b8;" prefWidth="120"/>
+                    <Label fx:id="labelReceiver"    style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="📝 Description :"  style="-fx-text-fill: #94a3b8;" prefWidth="120"/>
+                    <Label fx:id="labelDescription"  style="-fx-text-fill: #cbd5e1;" wrapText="true"/>
+                </HBox>
+            </VBox>
+
+            <!-- ÉTAPE 1 : compte test + bouton -->
+            <VBox spacing="10"
+                  style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-padding: 16;">
+                <Label text="ÉTAPE 1 — Payer dans le navigateur"
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <HBox spacing="30" alignment="CENTER_LEFT"
+                      style="-fx-background-color: #0f172a; -fx-background-radius: 8; -fx-padding: 10 14;">
+                    <VBox spacing="2">
+                        <Label text="📱 Phone"   style="-fx-text-fill: #64748b; -fx-font-size: 10px;"/>
+                        <Label text="11111111"   style="-fx-text-fill: #22c55e; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox spacing="2">
+                        <Label text="🔒 Password" style="-fx-text-fill: #64748b; -fx-font-size: 10px;"/>
+                        <Label text="11111111"    style="-fx-text-fill: #22c55e; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+                <Button fx:id="btnOpenBrowser"
+                        text="🌐 Ouvrir la page de paiement Paymee"
+                        onAction="#openPaymentBrowser"
+                        maxWidth="Infinity" prefHeight="42"
+                        style="-fx-background-color: #1d4ed8; -fx-text-fill: white;
+                               -fx-background-radius: 10; -fx-font-size: 13px;
+                               -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </VBox>
+
+            <!-- ÉTAPE 2 : vérification automatique -->
+            <VBox fx:id="stepVerifyBox" spacing="10"
+                  style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-padding: 16;">
+                <Label text="ÉTAPE 2 — Confirmer le paiement"
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <Label text="Après avoir payé dans le navigateur, cliquez sur Vérifier."
+                       wrapText="true"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="btnVerify"
+                            text="✅ J'ai payé — Vérifier automatiquement"
+                            onAction="#verifyPayment"
+                            prefHeight="40"
+                            style="-fx-background-color: #16a34a; -fx-text-fill: white;
+                                   -fx-background-radius: 10; -fx-font-size: 12px;
+                                   -fx-font-weight: bold; -fx-cursor: hand;"/>
+                    <ProgressIndicator fx:id="progressIndicator"
+                                       prefWidth="28" prefHeight="28"
+                                       style="-fx-accent: #f59e0b;"/>
+                </HBox>
+            </VBox>
+
+            <!-- FALLBACK : saisie manuelle (apparaît si polling échoue) -->
+            <VBox fx:id="stepManualBox" spacing="10"
+                  style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-padding: 16;
+                         -fx-border-color: #f59e0b; -fx-border-radius: 12; -fx-border-width: 1;">
+                <Label text="⚠️ Saisie manuelle du Transaction ID"
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <VBox spacing="4"
+                      style="-fx-background-color: #0f172a; -fx-background-radius: 8; -fx-padding: 10;">
+                    <Label text="Dans l'URL du navigateur (page des points qui tournent) :"
+                           style="-fx-text-fill: #64748b; -fx-font-size: 10px;"/>
+                    <Label text="...loader?payment_token=abc&amp;transaction=89569"
+                           style="-fx-text-fill: #93c5fd; -fx-font-size: 10px; -fx-font-family: monospace;"/>
+                    <Label text="Copiez le numéro après 'transaction='"
+                           style="-fx-text-fill: #22c55e; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                </VBox>
+                <TextField fx:id="txIdField"
+                           promptText="Ex : 89569"
+                           prefHeight="40"
+                           style="-fx-background-color: #0f172a; -fx-text-fill: #f59e0b;
+                                  -fx-border-color: #f59e0b; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 8 12;
+                                  -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Button fx:id="btnConfirmManual"
+                        text="✅ Confirmer avec ce numéro"
+                        onAction="#confirmManual"
+                        maxWidth="Infinity" prefHeight="40"
+                        style="-fx-background-color: #d97706; -fx-text-fill: white;
+                               -fx-background-radius: 10; -fx-font-size: 13px;
+                               -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </VBox>
+
+            <!-- STATUT -->
+            <VBox style="-fx-background-color: #1e293b; -fx-background-radius: 10; -fx-padding: 13;">
+                <Label fx:id="labelStatus"
+                       text="⏳ Prêt. Cliquez sur le bouton pour payer."
+                       wrapText="true"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- FOOTER -->
+    <HBox style="-fx-background-color: #1e293b; -fx-padding: 12 18;" alignment="CENTER_RIGHT">
+        <Button fx:id="btnCancel" text="✕ Annuler" onAction="#cancel"
+                prefHeight="36" prefWidth="100"
+                style="-fx-background-color: #475569; -fx-text-fill: white;
+                       -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;"/>
+    </HBox>
+
+</VBox>

@@ -39,12 +39,24 @@
         <Label fx:id="charCountLabel" text="0 / 10 caractères minimum"
                styleClass="form-char-count"/>
 
+        <!-- Moderation note -->
+        <Label text="🛡️ Votre texte est automatiquement analysé pour respecter la charte de la plateforme."
+               styleClass="form-tip"
+               wrapText="true"/>
+
     </VBox>
 
     <!-- Actions -->
     <HBox styleClass="form-actions">
-        <Button text="❌ Annuler"   onAction="#cancel"       styleClass="btn-cancel"/>
-        <Button text="✅ Soumettre" onAction="#addComplaint" styleClass="btn-submit"/>
+        <Button text="❌ Annuler"
+                onAction="#cancel"
+                styleClass="btn-cancel"/>
+
+        <!-- fx:id="submitButton" lets the controller change text to "Vérification en cours..." -->
+        <Button fx:id="submitButton"
+                text="✅ Soumettre"
+                onAction="#addComplaint"
+                styleClass="btn-submit"/>
     </HBox>
 
 </VBox>

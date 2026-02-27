@@ -47,7 +47,7 @@ public class MainFX extends Application {
         // 🔧 CONFIGURATION
         // ID = 1 → Admin
         // ID = 2+ → Utilisateur normal
-        int TEST_USER_ID = 6; // ← CHANGEZ ICI si besoin
+        int TEST_USER_ID = 3; // ← CHANGEZ ICI si besoin
 
         User testUser = userService.getById(TEST_USER_ID);
 

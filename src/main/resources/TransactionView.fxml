@@ -32,9 +32,19 @@
                 <Label fx:id="labelUserRole"    text="👥 Rôle"        styleClass="sidebar-role"/>
             </VBox>
             <Separator styleClass="sidebar-separator"/>
+
+            <!-- Navigation -->
             <Button text="📊 Transactions"                           styleClass="nav-btn-active"/>
             <Button fx:id="btnComplaints" text="📮 Réclamations"
                     onAction="#navigateToComplaints"                 styleClass="nav-btn"/>
+
+            <!-- ═══ BOUTON ANALYSE IA (nouveau) ═══ -->
+            <Button fx:id="btnAI"
+                    text="🤖 Analyse IA"
+                    onAction="#navigateToAI"
+                    styleClass="nav-btn"
+                    style="-fx-text-fill: #f59e0b; -fx-font-weight: bold;"/>
+
             <Region VBox.vgrow="ALWAYS"/>
             <Label text="Version 1.0.0" styleClass="sidebar-version"/>
         </VBox>

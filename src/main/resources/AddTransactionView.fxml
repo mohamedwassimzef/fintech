@@ -2,88 +2,151 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
       fx:controller="tn.esprit.services.AddTransactionController"
-      styleClass="form-root">
+      prefWidth="560" prefHeight="600"
+      spacing="0"
+      style="-fx-background-color: #0f172a;">
 
-    <stylesheets>
-        <String fx:value="/styles/global.css"/>
-        <String fx:value="/styles/forms.css"/>
-        <String fx:value="/styles/buttons.css"/>
-    </stylesheets>
-
-    <!-- Header -->
-    <VBox styleClass="form-header">
-        <Label text="💰" styleClass="form-header-icon"/>
-        <Label text="Nouvelle Transaction"          styleClass="form-header-title"/>
-        <Label text="Effectuez un virement sécurisé" styleClass="form-header-subtitle"/>
+    <!-- EN-TÊTE -->
+    <VBox alignment="CENTER" spacing="6"
+          style="-fx-background-color: #1e293b; -fx-padding: 22 20 18 20;">
+        <Label text="💸 Nouvelle Transaction"
+               style="-fx-text-fill: #f59e0b; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        <Label text="Effectuez une transaction directe ou payez via Paymee"
+               style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
     </VBox>
 
-    <!-- Form card -->
-    <VBox styleClass="form-card">
+    <!-- CORPS -->
+    <ScrollPane fitToWidth="true"
+                style="-fx-background: #0f172a; -fx-background-color: #0f172a;"
+                VBox.vgrow="ALWAYS">
+        <VBox spacing="14" style="-fx-padding: 18;">
 
-        <!-- Destinataire -->
-        <VBox styleClass="form-field-group">
-            <Label text="👤 Destinataire *" styleClass="form-field-label"/>
-            <ComboBox fx:id="receiverCombo"
-                      promptText="Sélectionnez le destinataire"
-                      prefWidth="400"
-                      styleClass="form-combo"/>
+            <!-- Destinataire -->
+            <VBox spacing="6">
+                <Label text="📥 Destinataire *"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="receiverCombo" maxWidth="Infinity" prefHeight="38"
+                          promptText="Sélectionner un destinataire"
+                          style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                                 -fx-border-color: #334155; -fx-border-radius: 8;
+                                 -fx-background-radius: 8;"/>
+            </VBox>
+
+            <!-- Montant -->
+            <VBox spacing="6">
+                <Label text="💵 Montant (TND) *"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <TextField fx:id="amountField" prefHeight="38"
+                           promptText="Ex: 150.000"
+                           style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                                  -fx-border-color: #334155; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 8 12;"/>
+                <Label fx:id="amountErrorLabel" visible="false"
+                       style="-fx-text-fill: #ef4444; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- Description -->
+            <VBox spacing="6">
+                <Label text="📝 Description"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <TextField fx:id="descriptionField" prefHeight="38"
+                           promptText="Description (optionnel)"
+                           style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                                  -fx-border-color: #334155; -fx-border-radius: 8;
+                                  -fx-background-radius: 8; -fx-padding: 8 12;"/>
+            </VBox>
+
+            <!-- Type -->
+            <VBox spacing="8">
+                <Label text="🔄 Type *"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <HBox spacing="12">
+                    <ToggleButton fx:id="debitToggle" text="💳 Débit"
+                                  style="-fx-background-color: #334155; -fx-text-fill: white;
+                                         -fx-background-radius: 10; -fx-padding: 12 25;
+                                         -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                    <ToggleButton fx:id="creditToggle" text="💰 Crédit"
+                                  style="-fx-background-color: #334155; -fx-text-fill: white;
+                                         -fx-background-radius: 10; -fx-padding: 12 25;
+                                         -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Statut -->
+            <VBox spacing="6">
+                <Label text="🏷️ Statut initial (transaction directe uniquement)"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="statusBox" prefWidth="220" prefHeight="36"
+                          style="-fx-background-color: #1e293b; -fx-text-fill: white;
+                                 -fx-border-color: #334155; -fx-border-radius: 8;
+                                 -fx-background-radius: 8;"/>
+            </VBox>
+
+            <!-- Résumé -->
+            <VBox fx:id="summaryBox" spacing="5"
+                  style="-fx-background-color: #1e3a5f; -fx-background-radius: 10;
+                         -fx-padding: 12 16; -fx-border-color: #1d4ed8;
+                         -fx-border-radius: 10; -fx-border-width: 1;">
+                <Label text="📋 Récapitulatif :"
+                       style="-fx-text-fill: #93c5fd; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label fx:id="summaryLabel"
+                       style="-fx-text-fill: #e2e8f0; -fx-font-size: 13px; -fx-font-weight: bold;"
+                       wrapText="true"/>
+            </VBox>
+
+            <Separator style="-fx-background-color: #334155;"/>
+
+            <Label text="💡 Choisissez votre mode de paiement :"
+                   style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+            <!-- Bouton transaction classique -->
+            <Button fx:id="submitButton"
+                    text="✅ Soumettre (transaction directe)"
+                    onAction="#addTransaction"
+                    maxWidth="Infinity" prefHeight="42"
+                    style="-fx-background-color: #334155; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-size: 13px;
+                           -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+            <!-- ══ BOUTON PAYMEE (NOUVEAU) ════════════════════════════════ -->
+            <Button fx:id="paymeeButton"
+                    text="💳 Payer avec Paymee"
+                    onAction="#payWithPaymee"
+                    maxWidth="Infinity" prefHeight="48"
+                    style="-fx-background-color: #f59e0b; -fx-text-fill: #0f172a;
+                           -fx-background-radius: 10; -fx-font-size: 15px;
+                           -fx-cursor: hand; -fx-font-weight: bold;
+                           -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.5), 18, 0, 0, 4);"/>
+
+            <!-- Info Paymee -->
+            <VBox spacing="3"
+                  style="-fx-background-color: #1c1400; -fx-background-radius: 8;
+                         -fx-padding: 10 14; -fx-border-color: #92400e;
+                         -fx-border-radius: 8; -fx-border-width: 1;">
+                <Label text="ℹ️ Paymee Sandbox — Compte test"
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                <Label text="📱 Phone : 11111111     🔒 Password : 11111111"
+                       style="-fx-text-fill: #d97706; -fx-font-size: 11px;"/>
+                <Label text="Le statut sera automatiquement 'completed' après confirmation Paymee."
+                       wrapText="true"
+                       style="-fx-text-fill: #78350f; -fx-font-size: 10px;"/>
+            </VBox>
+
         </VBox>
+    </ScrollPane>
 
-        <!-- Montant -->
-        <VBox styleClass="form-field-group">
-            <Label text="💵 Montant (TND) *" styleClass="form-field-label"/>
-            <TextField fx:id="amountField"
-                       promptText="Ex: 100.50"
-                       styleClass="form-input-lg"/>
-            <Label fx:id="amountErrorLabel" text="" styleClass="form-error"/>
-        </VBox>
-
-        <!-- Description -->
-        <VBox styleClass="form-field-group">
-            <Label text="📝 Description" styleClass="form-field-label"/>
-            <TextField fx:id="descriptionField"
-                       promptText="Ex: Paiement facture électricité"
-                       styleClass="form-input"/>
-        </VBox>
-
-        <!-- Type -->
-        <VBox styleClass="form-field-group">
-            <Label text="🏷️ Type de transaction *" styleClass="form-field-label"/>
-            <HBox spacing="10">
-                <ToggleButton fx:id="debitToggle"  text="💳 Débit"  styleClass="toggle-debit"/>
-                <ToggleButton fx:id="creditToggle" text="💰 Crédit" styleClass="toggle-credit"/>
-            </HBox>
-        </VBox>
-
-        <!-- Statut -->
-        <VBox styleClass="form-field-group">
-            <Label text="📊 Statut *" styleClass="form-field-label"/>
-            <ComboBox fx:id="statusBox"
-                      promptText="Sélectionnez le statut"
-                      prefWidth="400"
-                      styleClass="form-combo"/>
-        </VBox>
-
-        <Label text="💡 Tous les champs marqués d'un * sont obligatoires"
-               styleClass="form-tip"/>
-
-    </VBox>
-
-    <!-- Summary -->
-    <VBox fx:id="summaryBox" styleClass="form-summary" visible="false" managed="false">
-        <Label text="✅ Transaction prête"  styleClass="form-summary-title"/>
-        <Label fx:id="summaryLabel" text="" styleClass="form-summary-text"/>
-    </VBox>
-
-    <!-- Actions -->
-    <HBox styleClass="form-actions">
-        <Button text="❌ Annuler"    onAction="#cancel"          styleClass="btn-cancel"/>
-        <Button fx:id="submitButton"
-                text="✅ Confirmer"  onAction="#addTransaction"  styleClass="btn-submit"/>
+    <!-- FOOTER -->
+    <HBox style="-fx-background-color: #1e293b; -fx-padding: 12 18;"
+          alignment="CENTER_RIGHT">
+        <Button text="✕ Annuler" onAction="#cancel"
+                prefHeight="36" prefWidth="110"
+                style="-fx-background-color: #475569; -fx-text-fill: white;
+                       -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;"/>
     </HBox>
 
 </VBox>

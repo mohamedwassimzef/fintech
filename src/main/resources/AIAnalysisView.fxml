@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.services.AIAnalysisController"
+            prefWidth="1200" prefHeight="700"
+            style="-fx-background-color: #0f172a;">
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- SIDEBAR                                            -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <left>
+        <VBox prefWidth="250" spacing="0"
+              style="-fx-background-color: #1e293b;">
+
+            <!-- Logo -->
+            <VBox alignment="CENTER" spacing="6"
+                  style="-fx-padding: 28 20 20 20; -fx-background-color: #0f172a;">
+                <Label text="🤖" style="-fx-font-size: 38px;"/>
+                <Label text="Assistant IA"
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 17px; -fx-font-weight: bold;"/>
+                <Label text="Analyse Groq AI"
+                       style="-fx-text-fill: #475569; -fx-font-size: 10px;"/>
+                <Label fx:id="labelUser"
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <Separator style="-fx-background-color: #334155;"/>
+
+            <!-- KPIs -->
+            <VBox spacing="10" style="-fx-padding: 16;">
+                <Label text="📊 Résumé"
+                       style="-fx-text-fill: #64748b; -fx-font-size: 10px;
+                              -fx-font-weight: bold; -fx-padding: 0 0 4 0;"/>
+
+                <!-- Nb transactions -->
+                <VBox spacing="2"
+                      style="-fx-background-color: #0f172a; -fx-background-radius: 10; -fx-padding: 12;">
+                    <Label text="📋 Transactions"
+                           style="-fx-text-fill: #64748b; -fx-font-size: 10px;"/>
+                    <Label fx:id="labelTxCount" text="—"
+                           style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <!-- Débits -->
+                <VBox spacing="2"
+                      style="-fx-background-color: #3f1515; -fx-background-radius: 10; -fx-padding: 12;">
+                    <Label text="💳 Total Débits"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 10px;"/>
+                    <Label fx:id="labelTotalDebit" text="—"
+                           style="-fx-text-fill: #ef4444; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <!-- Crédits -->
+                <VBox spacing="2"
+                      style="-fx-background-color: #063f20; -fx-background-radius: 10; -fx-padding: 12;">
+                    <Label text="💰 Total Crédits"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 10px;"/>
+                    <Label fx:id="labelTotalCredit" text="—"
+                           style="-fx-text-fill: #22c55e; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <!-- Solde -->
+                <VBox spacing="2"
+                      style="-fx-background-color: #1e293b; -fx-background-radius: 10;
+                             -fx-padding: 12; -fx-border-color: #334155;
+                             -fx-border-radius: 10; -fx-border-width: 1;">
+                    <Label text="⚖️ Solde Net"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 10px;"/>
+                    <Label fx:id="labelBalance" text="—"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                </VBox>
+            </VBox>
+
+            <Separator style="-fx-background-color: #334155;"/>
+
+            <!-- Filtre période -->
+            <VBox spacing="8" style="-fx-padding: 14;">
+                <Label text="⚙️ Période à analyser"
+                       style="-fx-text-fill: #64748b; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="periodFilter" maxWidth="Infinity" prefHeight="34"
+                          style="-fx-background-color: #0f172a; -fx-text-fill: white;
+                                 -fx-border-color: #334155; -fx-border-radius: 8;
+                                 -fx-background-radius: 8;"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Navigation -->
+            <VBox spacing="8" style="-fx-padding: 14;">
+                <Button fx:id="btnTransactions"
+                        text="💸 Mes Transactions"
+                        onAction="#navigateToTransactions"
+                        maxWidth="Infinity" prefHeight="36"
+                        style="-fx-background-color: #334155; -fx-text-fill: white;
+                               -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ══════════════════════════════════════════════════ -->
+    <!-- CONTENU PRINCIPAL                                  -->
+    <!-- ══════════════════════════════════════════════════ -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20"
+                  style="-fx-background-color: #1e293b; -fx-padding: 18 28;">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="🤖 Analyse IA de vos Transactions"
+                           style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label text="Groq AI (Llama 3.3) analyse vos habitudes et vous donne des conseils personnalisés"
+                           style="-fx-text-fill: #64748b; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <Button fx:id="btnAnalyze"
+                        text="🤖 Analyser avec Groq AI"
+                        onAction="#analyzeWithAI"
+                        prefHeight="44" prefWidth="230"
+                        style="-fx-background-color: #f59e0b; -fx-text-fill: #0f172a;
+                               -fx-background-radius: 10; -fx-font-size: 13px;
+                               -fx-font-weight: bold; -fx-cursor: hand;
+                               -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.5), 18, 0, 0, 4);"/>
+            </HBox>
+
+            <!-- Loading -->
+            <VBox fx:id="loadingBox" alignment="CENTER" spacing="12"
+                  style="-fx-background-color: #0f172a; -fx-padding: 24;">
+                <ProgressIndicator fx:id="progressIndicator" prefWidth="44" prefHeight="44"
+                                   style="-fx-accent: #f59e0b;"/>
+                <Label fx:id="labelLoading"
+                       text="🤖 Groq AI analyse vos transactions..."
+                       style="-fx-text-fill: #f59e0b; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label text="Généralement moins de 3 secondes."
+                       style="-fx-text-fill: #475569; -fx-font-size: 10px;"/>
+            </VBox>
+
+            <!-- Résultats en cartes -->
+            <ScrollPane fx:id="resultScroll"
+                        fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background: #0f172a; -fx-background-color: #0f172a;
+                               -fx-border-color: transparent;">
+                <VBox fx:id="resultContainer"
+                      spacing="14"
+                      style="-fx-padding: 20 28; -fx-background-color: #0f172a;"/>
+            </ScrollPane>
+
+            <!-- Footer -->
+            <HBox alignment="CENTER"
+                  style="-fx-background-color: #1e293b; -fx-padding: 8 28;">
+                <Label text="⚡ Propulsé par Groq API (Llama 3.3 70B) — Gratuit · 14 400 req/jour"
+                       style="-fx-text-fill: #334155; -fx-font-size: 10px;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
