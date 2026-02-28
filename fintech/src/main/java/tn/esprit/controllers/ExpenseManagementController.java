@@ -15,7 +15,7 @@ import tn.esprit.entities.Budget;
 import tn.esprit.entities.Expense;
 import tn.esprit.services.BudgetService;
 import tn.esprit.services.ExpenseService;
-
+import java.util.ArrayList;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -31,6 +31,14 @@ import javafx.stage.FileChooser;
 import javafx.application.Platform;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.DatePicker;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+
 
 public class ExpenseManagementController {
 
@@ -278,280 +286,252 @@ public class ExpenseManagementController {
 
     @FXML
     private void toggleNotifications() {}
+
     @FXML
     private void handleScanReceipt() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Receipt Image");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp")
         );
 
-        File file = fileChooser.showOpenDialog(expenseTable.getScene().getWindow());
-        if (file == null) return;
+        Stage stage = (Stage) expenseTable.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
 
-        showAlert("Scanning", "📸 Scanning your receipt, please wait...", Alert.AlertType.INFORMATION);
+        if (file != null) {
+            new Thread(() -> {
+                try {
+                    String amount = detectAmountFromImage(file);
 
-        new Thread(() -> {
+                    Platform.runLater(() -> {
+                        if (amount != null) {
+                            showAlert("Success", "Detected amount: $" + amount);
+                            prefillAmount(amount);
+                        } else {
+                            showAlert("Error", "No amount found in receipt");
+                        }
+                    });
+                } catch (Exception e) {
+                    Platform.runLater(() -> showAlert("Error", e.getMessage()));
+                }
+            }).start();
+        }
+    }
+    // Add this method for 2-parameter alerts
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    private void prefillAmount(String amount) {
+        // Create dialog
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Add Expense from Receipt");
+        dialog.setHeaderText("Detected Amount: $" + amount);
+
+        // Set button types
+        ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        // Create form grid
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        // Amount field (pre-filled)
+        TextField amountField = new TextField(amount);
+        amountField.setEditable(true);
+
+        // Description field
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Enter description");
+
+        // Category field
+        TextField categoryField = new TextField();
+        categoryField.setPromptText("Enter category");
+
+        // Date picker
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+
+        // Budget ComboBox
+        ComboBox<Budget> budgetCombo = new ComboBox<>();
+        List<Budget> budgets = budgetService.getAllBudgets();
+        budgetCombo.setItems(FXCollections.observableArrayList(budgets));
+
+        // Custom display for budget items
+        budgetCombo.setCellFactory(lv -> new ListCell<Budget>() {
+            @Override
+            protected void updateItem(Budget budget, boolean empty) {
+                super.updateItem(budget, empty);
+                setText(empty || budget == null ? null : budget.getName() + " ($" + budget.getAmount() + ")");
+            }
+        });
+
+        budgetCombo.setButtonCell(new ListCell<Budget>() {
+            @Override
+            protected void updateItem(Budget budget, boolean empty) {
+                super.updateItem(budget, empty);
+                setText(empty || budget == null ? null : budget.getName());
+            }
+        });
+
+        // Add "No Budget" option
+        budgetCombo.getItems().add(0, null);
+        budgetCombo.setPromptText("Select a budget (optional)");
+
+        // Add to grid
+        grid.add(new Label("Amount:"), 0, 0);
+        grid.add(amountField, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionField, 1, 1);
+        grid.add(new Label("Category:"), 0, 2);
+        grid.add(categoryField, 1, 2);
+        grid.add(new Label("Date:"), 0, 3);
+        grid.add(datePicker, 1, 3);
+        grid.add(new Label("Link to Budget:"), 0, 4);
+        grid.add(budgetCombo, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on description field
+        Platform.runLater(() -> descriptionField.requestFocus());
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if (result.isPresent() && result.get() == saveButtonType) {
             try {
-                System.out.println("=== Starting OCR Scan ===");
-                String apiKey = "12654e13-1370-4b01-bb50-6a44998c1a33";
+                // Create new expense
+                Expense expense = new Expense();
+                expense.setAmount(new BigDecimal(amountField.getText()));
+                expense.setDescription(descriptionField.getText());
+                expense.setCategory(categoryField.getText());
+                expense.setExpenseDate(datePicker.getValue());
 
-                // Test internet connection first
-                if (!testInternetConnection()) {
-                    Platform.runLater(() -> showAlert("Error", "No internet connection available", Alert.AlertType.ERROR));
-                    return;
+                // Link to selected budget if any
+                Budget selectedBudget = budgetCombo.getValue();
+                if (selectedBudget != null) {
+                    expense.setBudgetId(selectedBudget.getId());
                 }
 
-                // Perform the OCR scan
-                performOCRScan(file, apiKey);
+                // Save to database
+                boolean success = expenseService.createExpense(expense);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                final String errorMsg = e.getMessage() != null ? e.getMessage() : "Unknown error";
-                Platform.runLater(() -> showAlert("Error", "Scan failed: " + errorMsg, Alert.AlertType.ERROR));
-            }
-        }).start();
-    }
-
-    private boolean testInternetConnection() {
-        try {
-            System.out.println("Testing internet connection...");
-            URL testUrl = new URL("https://www.google.com");
-            HttpURLConnection testConn = (HttpURLConnection) testUrl.openConnection();
-            testConn.setRequestMethod("GET");
-            testConn.setConnectTimeout(5000);
-            testConn.setReadTimeout(5000);
-            int responseCode = testConn.getResponseCode();
-            System.out.println("Internet connection test: " + responseCode);
-            testConn.disconnect();
-            return responseCode == 200;
-        } catch (Exception e) {
-            System.out.println("Internet connection test failed: " + e.getMessage());
-            return false;
-        }
-    }
-
-    private void performOCRScan(File file, String apiKey) {
-        HttpURLConnection conn = null;
-        try {
-            String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
-            // Using the correct Cloudmersive OCR endpoint
-            URL url = new URL("https://api.cloudmersive.com/ocr/photo/toText");
-            conn = (HttpURLConnection) url.openConnection();
-
-            // Set up the connection
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Apikey", apiKey);
-            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            conn.setDoOutput(true);
-            conn.setConnectTimeout(30000);
-            conn.setReadTimeout(30000);
-
-            System.out.println("Request URL: " + url);
-            System.out.println("Request Method: POST");
-            System.out.println("File: " + file.getName());
-            System.out.println("File size: " + file.length() + " bytes");
-
-            // Write the multipart data
-            try (DataOutputStream request = new DataOutputStream(conn.getOutputStream())) {
-                // Start boundary with file part
-                request.writeBytes("--" + boundary + "\r\n");
-                request.writeBytes("Content-Disposition: form-data; name=\"imageFile\"; filename=\"" + file.getName() + "\"\r\n");
-                request.writeBytes("Content-Type: " + getMimeType(file.getName()) + "\r\n");
-                request.writeBytes("\r\n");
-
-                // Write image data
-                byte[] imageData = Files.readAllBytes(file.toPath());
-                request.write(imageData);
-                request.writeBytes("\r\n");
-
-                // End boundary
-                request.writeBytes("--" + boundary + "--\r\n");
-                request.flush();
-            }
-
-            // Get response code
-            int responseCode = conn.getResponseCode();
-            String responseMessage = conn.getResponseMessage();
-
-            System.out.println("OCR API Response Code: " + responseCode);
-            System.out.println("Response Message: " + responseMessage);
-
-            if (responseCode == 200) {
-                // Success - read response
-                StringBuilder response = new StringBuilder();
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-                }
-
-                System.out.println("OCR Response received, processing...");
-                processOCRResponse(response.toString());
-
-            } else {
-                // Handle error response
-                StringBuilder errorResponse = new StringBuilder();
-
-                // Try to read error stream if available
-                InputStream errorStream = conn.getErrorStream();
-                if (errorStream != null) {
-                    try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream))) {
-                        String line;
-                        while ((line = errorReader.readLine()) != null) {
-                            errorResponse.append(line);
-                        }
-                    }
-                }
-
-                String errorMsg = "HTTP " + responseCode + " - " + responseMessage;
-                if (errorResponse.length() > 0) {
-                    errorMsg += "\nDetails: " + errorResponse.toString();
-                }
-
-                System.out.println("OCR Error: " + errorMsg);
-
-                final String finalErrorMsg = errorMsg;
-                Platform.runLater(() -> showAlert("OCR Error", "Failed to scan receipt.\n" + finalErrorMsg, Alert.AlertType.ERROR));
-            }
-
-        } catch (Exception e) {
-            System.out.println("OCR scan failed: " + e.getMessage());
-            e.printStackTrace();
-
-            String errorMessage = e.getMessage();
-            if (errorMessage == null || errorMessage.isEmpty()) {
-                errorMessage = "Unknown error occurred";
-            }
-
-            final String finalError = errorMessage;
-            Platform.runLater(() -> showAlert("Error", "Scan failed: " + finalError, Alert.AlertType.ERROR));
-
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-    }
-
-    private String getMimeType(String fileName) {
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        switch (extension) {
-            case "png": return "image/png";
-            case "jpg":
-            case "jpeg": return "image/jpeg";
-            default: return "application/octet-stream";
-        }
-    }
-
-    private void processOCRResponse(String jsonResponse) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode json = mapper.readTree(jsonResponse);
-
-            StringBuilder extractedText = new StringBuilder();
-
-            // Navigate through the JSON structure
-            JsonNode pages = json.path("Pages");
-            if (pages.isArray()) {
-                for (JsonNode page : pages) {
-                    JsonNode lines = page.path("Lines");
-                    if (lines.isArray()) {
-                        for (JsonNode line : lines) {
-                            extractedText.append(line.path("LineText").asText()).append(" ");
-                        }
-                    }
-                }
-            }
-
-            String finalText = extractedText.toString().trim();
-            System.out.println("Extracted Text: " + finalText);
-
-            String amount = extractAmount(finalText);
-
-            Platform.runLater(() -> {
-                if (!amount.isEmpty()) {
-                    openExpenseFormWithAmount(amount);
+                if (success) {
+                    showAlert("Success", "Expense added successfully!");
+                    loadExpenses(); // Refresh the table
                 } else {
-                    // Show extracted text even if no amount found
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Receipt Scanned");
-                    alert.setHeaderText("Text extracted from receipt:");
-
-                    TextArea textArea = new TextArea(finalText);
-                    textArea.setEditable(false);
-                    textArea.setWrapText(true);
-                    textArea.setMaxWidth(Double.MAX_VALUE);
-                    textArea.setMaxHeight(Double.MAX_VALUE);
-
-                    alert.getDialogPane().setContent(textArea);
-                    alert.getDialogPane().setPrefSize(500, 400);
-                    alert.showAndWait();
+                    showAlert("Error", "Failed to add expense.");
                 }
-            });
-
-        } catch (Exception e) {
-            System.out.println("Error parsing OCR response: " + e.getMessage());
-            e.printStackTrace();
-            Platform.runLater(() -> showAlert("Error", "Failed to parse OCR response", Alert.AlertType.ERROR));
+            } catch (NumberFormatException e) {
+                showAlert("Error", "Invalid amount format.");
+            } catch (Exception e) {
+                showAlert("Error", "Error adding expense: " + e.getMessage());
+            }
         }
     }
 
-    private void openExpenseFormWithAmount(String amount) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AddExpense.fxml"));
-            Parent root = loader.load();
 
-            AddExpenseController controller = loader.getController();
-            controller.prefillAmount(amount);
 
-            Stage stage = new Stage();
-            stage.setTitle("Add Expense from Receipt");
-            stage.setScene(new Scene(root, 500, 450));
-            stage.showAndWait();
 
-            // Refresh the expenses list after adding
-            loadExpenses();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not open expense form: " + e.getMessage(), Alert.AlertType.ERROR);
+
+
+
+
+
+    private String detectAmountFromImage(File imageFile) throws Exception {
+        String apiKey = "K86064184588957"; // Your OCR.space key
+
+        // Use multipart/form-data to send the file directly
+        String boundary = "---" + System.currentTimeMillis() + "---";
+
+        URL url = new URL("https://api.ocr.space/parse/image");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        conn.setDoOutput(true);
+
+        try (OutputStream os = conn.getOutputStream();
+             PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"), true)) {
+
+            // Add API key
+            writer.append("--" + boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"apikey\"").append("\r\n");
+            writer.append("Content-Type: text/plain; charset=UTF-8").append("\r\n");
+            writer.append("\r\n");
+            writer.append(apiKey).append("\r\n");
+
+            // Add file
+            writer.append("--" + boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + imageFile.getName() + "\"").append("\r\n");
+            writer.append("Content-Type: " + Files.probeContentType(imageFile.toPath())).append("\r\n");
+            writer.append("\r\n");
+            writer.flush();
+
+            // Write file bytes
+            Files.copy(imageFile.toPath(), os);
+            os.flush();
+
+            // End boundary
+            writer.append("\r\n");
+            writer.append("--" + boundary + "--").append("\r\n");
+            writer.flush();
         }
+
+        // Read response
+        int responseCode = conn.getResponseCode();
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                responseCode == 200 ? conn.getInputStream() : conn.getErrorStream(), "UTF-8"));
+
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            response.append(line);
+        }
+        br.close();
+
+        String responseStr = response.toString();
+        System.out.println("OCR Response: " + responseStr);
+
+        if (responseCode != 200) {
+            throw new Exception("HTTP Error " + responseCode + ": " + responseStr);
+        }
+
+        // Parse JSON
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(responseStr);
+
+        if (root.has("ErrorMessage") && !root.get("ErrorMessage").isNull()) {
+            throw new Exception("OCR Error: " + root.get("ErrorMessage").asText());
+        }
+
+        if (root.has("ParsedResults") && root.get("ParsedResults").size() > 0) {
+            String text = root.path("ParsedResults").get(0).path("ParsedText").asText();
+            System.out.println("OCR Text: " + text);
+
+            Pattern pattern = Pattern.compile("\\$?\\s*(\\d+[.,]\\d{2})\\b");
+            Matcher matcher = pattern.matcher(text);
+
+            List<String> amounts = new ArrayList<>();
+            while (matcher.find()) {
+                amounts.add(matcher.group(1).replace(",", "."));
+            }
+
+            if (!amounts.isEmpty()) {
+                return amounts.stream()
+                        .max(java.util.Comparator.comparingDouble(Double::parseDouble))
+                        .orElse(null);
+            }
+        }
+        return null;
     }
 
-    private String extractAmount(String text) {
-        if (text == null || text.isEmpty()) {
-            return "";
-        }
 
-        // Pattern to find amounts like 10.99, 10,99, $10.99, total 10.99, etc.
-        Pattern pattern = Pattern.compile(
-                "(?:total|amount|sum|\\$|€|£)?\\s*([0-9]+[.,][0-9]{2})",
-                Pattern.CASE_INSENSITIVE
-        );
-        Matcher matcher = pattern.matcher(text);
 
-        if (matcher.find()) {
-            String amount = matcher.group(1).replace(",", ".");
-            System.out.println("Found amount: " + amount);
-            return amount;
-        }
 
-        // Try alternative pattern for whole numbers
-        pattern = Pattern.compile(
-                "(?:total|amount|sum|\\$|€|£)?\\s*([0-9]+)",
-                Pattern.CASE_INSENSITIVE
-        );
-        matcher = pattern.matcher(text);
 
-        if (matcher.find()) {
-            String amount = matcher.group(1) + ".00";
-            System.out.println("Found amount (whole number): " + amount);
-            return amount;
-        }
-
-        return "";
-    }
 
 }

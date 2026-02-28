@@ -231,8 +231,8 @@ public class WelcomeScreenController {
     private void loadNews() {
         new Thread(() -> {
             try {
-                String apiKey = "ea5e36f1d7614484b6850ed19f1732e9";
-                String url = "https://newsapi.org/v2/everything?q=finance+budget+money&language=en&pageSize=10&apiKey=" + apiKey;
+                String apiKey = "d6gcue9r01qt4932f2fgd6gcue9r01qt4932f2g0";
+                String url = "https://finnhub.io/api/v1/news?category=general&token=" + apiKey;
 
                 HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
                 conn.setRequestMethod("GET");
@@ -246,14 +246,15 @@ public class WelcomeScreenController {
 
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode json = mapper.readTree(sb.toString());
-                JsonNode articles = json.get("articles");
 
                 List<String> headlines = new ArrayList<>();
-                for (JsonNode article : articles) {
-                    String title = article.get("title").asText();
-                    if (!title.contains("[Removed]")) {
-                        headlines.add(title);
+                for (JsonNode article : json) {
+                    String headline = article.get("headline").asText();
+                    String source = article.get("source").asText();
+                    if (!headline.isEmpty() && !headline.equals("null")) {
+                        headlines.add(source + ": " + headline);
                     }
+                    if (headlines.size() >= 15) break;
                 }
 
                 Platform.runLater(() -> startTicker(headlines));
@@ -262,31 +263,6 @@ public class WelcomeScreenController {
                 Platform.runLater(() -> newsTicker.setText("Could not load news: " + e.getMessage()));
             }
         }).start();
-    }
-
-    private void startTicker(List<String> headlines) {
-        if (headlines.isEmpty()) return;
-
-        // Show first headline immediately
-        newsTicker.setText("🔹 " + headlines.stream().reduce((a, b) -> a + "          🔸          " + b).orElse(""));
-
-        // Wait for layout to compute width
-        tickerPane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
-            double paneWidth = newVal.getWidth();
-            double textWidth = newsTicker.prefWidth(-1);
-
-            if (paneWidth <= 0) return;
-
-            // Start off screen to the right
-            newsTicker.setTranslateX(paneWidth);
-
-            TranslateTransition transition = new TranslateTransition(Duration.seconds(headlines.size() * 8), newsTicker);
-            transition.setFromX(paneWidth);
-            transition.setToX(-textWidth);
-            transition.setCycleCount(TranslateTransition.INDEFINITE);
-            transition.setInterpolator(javafx.animation.Interpolator.LINEAR);
-            transition.play();
-        });
     }
 
     private void loadHealthScore() {
@@ -486,6 +462,32 @@ public class WelcomeScreenController {
             e.printStackTrace();
             System.err.println("Failed to load BillManagement.fxml");
         }
+    }
+    @FXML
+    private void toggleNotifications() {
+        showNotifications();
+    }
+
+    private void startTicker(List<String> headlines) {
+        if (headlines.isEmpty()) return;
+
+        newsTicker.setText(headlines.stream().reduce((a, b) -> a + "          |          " + b).orElse(""));
+
+        tickerPane.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
+            double paneWidth = newVal.getWidth();
+            double textWidth = newsTicker.prefWidth(-1);
+
+            if (paneWidth <= 0) return;
+
+            newsTicker.setTranslateX(paneWidth);
+
+            TranslateTransition transition = new TranslateTransition(Duration.seconds(headlines.size() * 8), newsTicker);
+            transition.setFromX(paneWidth);
+            transition.setToX(-textWidth);
+            transition.setCycleCount(TranslateTransition.INDEFINITE);
+            transition.setInterpolator(javafx.animation.Interpolator.LINEAR);
+            transition.play();
+        });
     }
     }
 

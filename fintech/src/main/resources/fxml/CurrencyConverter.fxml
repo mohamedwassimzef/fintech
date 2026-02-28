@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -23,41 +24,69 @@
     </top>
 
     <center>
-        <VBox spacing="30" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #1a1a2e;">
+        <ScrollPane fitToWidth="true" style="-fx-background: #1a1a2e; -fx-background-color: #1a1a2e;">
+            <VBox spacing="30" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #1a1a2e;">
 
-            <Label text="Currency Converter" style="-fx-text-fill: #f0b429; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                <Label text="Currency Converter" style="-fx-text-fill: #f0b429; -fx-font-size: 32px; -fx-font-weight: bold;"/>
 
-            <VBox spacing="20" alignment="CENTER" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 40;" prefWidth="500">
+                <!-- Converter Card -->
+                <VBox spacing="20" alignment="CENTER" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 40;" prefWidth="600">
 
-                <VBox spacing="5">
-                    <Label text="Amount" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
-                    <TextField fx:id="amountField" promptText="Enter amount" style="-fx-font-size: 16px; -fx-padding: 10; -fx-background-color: #0f3460; -fx-text-fill: white; -fx-prompt-text-fill: #a0a0b0; -fx-background-radius: 8;" prefWidth="400"/>
+                    <VBox spacing="5">
+                        <Label text="Amount" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                        <TextField fx:id="amountField" promptText="Enter amount" style="-fx-font-size: 16px; -fx-padding: 10; -fx-background-color: #0f3460; -fx-text-fill: white; -fx-prompt-text-fill: #a0a0b0; -fx-background-radius: 8;" prefWidth="500"/>
+                    </VBox>
+
+                    <HBox spacing="20" alignment="CENTER">
+                        <VBox spacing="5">
+                            <Label text="From" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                            <ComboBox fx:id="fromCurrency" prefWidth="200" style="-fx-font-size: 14px;"/>
+                        </VBox>
+
+                        <Label text="→" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+
+                        <VBox spacing="5">
+                            <Label text="To" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
+                            <ComboBox fx:id="toCurrency" prefWidth="200" style="-fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <Button text="Convert" onAction="#handleConvert" prefWidth="500" prefHeight="45" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;"/>
+
+                    <VBox spacing="5" alignment="CENTER">
+                        <Label fx:id="resultLabel" text="" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #4ecca3;"/>
+                        <Label fx:id="errorLabel" text="" style="-fx-text-fill: #e94560; -fx-font-size: 13px;"/>
+                    </VBox>
+
+                    <!-- Real-time rate info -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <Label fx:id="rateLabel" style="-fx-font-size: 14px; -fx-text-fill: #a0a0b0;"/>
+                        <Label fx:id="changeLabel" style="-fx-font-size: 14px;"/>
+                    </HBox>
+                    <Label fx:id="lastUpdateLabel" style="-fx-text-fill: #888; -fx-font-size: 11px;"/>
+
                 </VBox>
 
-                <HBox spacing="20" alignment="CENTER">
-                    <VBox spacing="5">
-                        <Label text="From" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
-                        <ComboBox fx:id="fromCurrency" prefWidth="180" style="-fx-font-size: 14px;"/>
-                    </VBox>
+                <Separator style="-fx-background-color: #16213e;"/>
 
-                    <Label text="to" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
+                <!-- Chart Section -->
+                <VBox spacing="15" alignment="CENTER" style="-fx-background-color: #16213e; -fx-background-radius: 15; -fx-padding: 30;" prefWidth="600">
+                    <Label text="30-Day Exchange Rate History" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f0b429;"/>
 
-                    <VBox spacing="5">
-                        <Label text="To" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #a0a0b0;"/>
-                        <ComboBox fx:id="toCurrency" prefWidth="180" style="-fx-font-size: 14px;"/>
-                    </VBox>
-                </HBox>
-
-                <Button text="Convert" onAction="#handleConvert" prefWidth="400" prefHeight="45" style="-fx-background-color: #f0b429; -fx-text-fill: #1a1a2e; -fx-font-size: 16px; -fx-font-weight: bold; -fx-background-radius: 8;"/>
-
-                <VBox spacing="5" alignment="CENTER">
-                    <Label fx:id="resultLabel" text="" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #4ecca3;"/>
-                    <Label fx:id="errorLabel" text="" style="-fx-text-fill: #e94560; -fx-font-size: 13px;"/>
-                    <Label fx:id="rateLabel" text="" style="-fx-text-fill: #a0a0b0; -fx-font-size: 12px;"/>
+                    <LineChart fx:id="historyChart" prefHeight="350" prefWidth="550"
+                               style="-fx-background-color: #0f3460; -fx-text-fill: white;">
+                        <xAxis>
+                            <CategoryAxis fx:id="xAxis" label="Date"
+                                          style="-fx-text-fill: white; -fx-tick-label-fill: white;"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="yAxis" label="Exchange Rate"
+                                        style="-fx-text-fill: white; -fx-tick-label-fill: white;"/>
+                        </yAxis>
+                    </LineChart>
                 </VBox>
 
             </VBox>
-        </VBox>
+        </ScrollPane>
     </center>
-
 </BorderPane>
