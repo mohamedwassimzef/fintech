@@ -1,142 +1,109 @@
-# Business Logic & Unit Testing Documentation
+# 📑 FinTech System Technical Documentation
 
-This project uses a dedicated "Business Manager" layer to isolate core domain logic from framework dependencies (controllers, repositories, and database). This ensures that business rules are strictly enforced and easily testable.
-
-## 🏗️ Architecture Overview
-
-Each core entity has a corresponding **Manager** service located in `src/Service/Manager/`.
-
-- **Entity**: Data structure with Doctrine mapping and validation constraints.
-- **Manager**: Pure PHP service containing a `validate()` method to enforce business rules manually.
-- **Unit Test**: Isolated PHPUnit tests in `tests/Service/` that verify the Manager's logic without a database.
+This document provides a comprehensive overview of the FinTech ecosystem, including the **Java Desktop Application** (Frontend/Desktop Client) and the **Symfony Backend** (API & Webhooks).
 
 ---
 
-## 🚀 Running the Tests
+## 🏗️ 1. Architecture Overview
 
-### 1. Run all isolated unit tests
-To run only the business manager tests with a clean output:
+The system is split into two main components that communicate via a shared MySQL database and external webhooks.
+
+### ☕ Java Desktop Application (`IdeaProjects/fintech`)
+- **UI Framework**: JavaFX (FXML).
+- **Persistence Layer**: Custom DAO pattern using JDBC.
+- **Key Modules**:
+    - **Insurance**: Asset management, package browsing, and contract requests.
+    - **Personal Finance**: Budgets, expenses, and loans.
+    - **Transactions**: Payment processing via Paymee.
+    - **Admin Dashboard**: Request approval, package management, and analytics.
+
+### 🐘 Symfony Backend (`dev/finance_app`)
+- **Role**: Web API, background processing, and Webhook consumer.
+- **Key Features**:
+    - **Webhook Receivers**: Handles Paymee (payments) and BoldSign (digital signatures) notifications.
+    - **Business Logic Managers**: Pure PHP services in `src/Service/Manager/` that enforce domain rules.
+    - **Data Seeding**: Symfony console commands for realistic test data.
+
+---
+
+## 🗄️ 2. Database Synchronization & Integrity
+
+The database uses a strict schema with several mandatory audit columns. 
+
+### Audit Columns
+Every transactional table (e.g., `app_transaction`, `insurance_package`, `expense`) requires:
+- `created_at` (DATETIME): Automatically set via `NOW()` in DAOs.
+- `updated_at` (DATETIME): Updated on every edit via `NOW()`.
+- `created_by_id` (INT): Foreign key to `app_user(id)`.
+
+### DAO Implementation Strategy
+To prevent **Foreign Key Constraint Violations**, all Java DAOs use a standardized identity resolution pattern:
+```java
+int createdBy = SessionManager.getInstance().getUserId();
+// Fallback to owner if session is unavailable
+if (createdBy <= 0) createdBy = entity.getUserId(); 
+pstmt.setInt(N, createdBy);
+```
+
+---
+
+## 💳 3. Paymee Payment Integration
+
+The system integrates with **Paymee** for secure financial transactions.
+
+### Workflow
+1.  **Creation**: Java app creates a `PENDING` record in `app_transaction`.
+2.  **API Call**: `Payment.createPayment()` sends request to Paymee.
+3.  **Bypassing SSL**: For the **Sandbox environment**, SSL validation is bypassed in Java to prevent `CertificateExpiredException` caused by expired sandbox certs.
+4.  **UX**: A dedicated window pops up in the Java app showing the payment link.
+5.  **Confirmation**: The Symfony Webhook (`/webhook/paymee`) updates the transaction to `COMPLETED` once the payment is verified.
+
+### Configuration
+- **API Key**: Managed in `tn.esprit.services.Payment`.
+- **Environment**: Currently configured for `https://sandbox.paymee.tn/api/v2/`.
+
+---
+
+## 📧 4. Email Service Setup
+
+Emails are sent via **Gmail SMTP** using `Jakarta Mail`.
+
+### Gmail Authentication
+Because Google has deprecated standard password login, you **MUST** use an **App Password**:
+1.  Enable **2-Step Verification** on your Google account.
+2.  Generate an **App Password** named "FinTech".
+3.  Update the `APP_PASSWORD` constant in `src/main/java/tn/esprit/services/EmailService.java`.
+
+---
+
+## 🛠️ 5. Troubleshooting & Common Fixes
+
+### "Nothing happens after clicking Post Payment"
+- **Check Console**: Look for `SSLHandshakeException` or `401 Unauthorized`.
+- **Validation**: Ensure all required fields (Name, Phone, Email) are filled.
+- **DB Check**: Verify that a row was inserted into `app_transaction` with status `PENDING`.
+
+### "FXMLLoadException" on Dashboard
+- **Enum Mismatch**: Often caused by a `RequestStatus` in the database that isn't defined in the Java `tn.esprit.enums.RequestStatus` class.
+- **Solution**: Use `RequestStatus.fromString()` which defaults to `PENDING` for unknown values.
+
+### "Foreign Key Constraint Fails"
+- **Root Cause**: Trying to save `created_by_id = 1` when no user with ID 1 exists.
+- **Solution**: Always use `SessionManager.getInstance().getUserId()`.
+
+---
+
+## 🧪 6. Running Tests
+
+### Symfony Unit Tests
 ```powershell
 php bin/phpunit tests/Service/ --testdox
 ```
 
-### 2. Run a specific test
+### Java Build Check
+Verify your `pom.xml` dependencies are correctly resolved by running:
 ```powershell
-php bin/phpunit tests/Service/BillManagerTest.php --testdox
-```
-
-### 3. Run all project tests (Unit + Integration)
-```powershell
-php bin/phpunit
-```
-
----
-
-## 🛠️ How to Use
-
-### 1. Adding a New Business Rule
-If you need to add a new rule (e.g., "A budget cannot exceed 10 years duration"):
-
-1. Open the manager class (e.g., `src/Service/Manager/BudgetManager.php`).
-2. Add the logic inside the `validate()` method:
-   ```php
-   if ($budget->getDurationInYears() > 10) {
-       throw new \InvalidArgumentException('Budget duration cannot exceed 10 years.');
-   }
-   ```
-
-### 2. Adding a New Test Case
-Every time you add a rule, you **must** add a corresponding test in `tests/Service/`:
-
-1. Open the test class (e.g., `tests/Service/BudgetManagerTest.php`).
-2. Add a failing scenario:
-   ```php
-   public function testDurationTooLongThrows(): void
-   {
-       $budget = $this->validBudget();
-       $budget->setStartDate(new \DateTime('2024-01-01'));
-       $budget->setEndDate(new \DateTime('2040-01-01')); // 16 years
-       
-       $this->expectException(\InvalidArgumentException::class);
-       $this->expectExceptionMessageMatches('/cannot exceed 10 years/i');
-       
-       $this->manager->validate($budget);
-   }
-   ```
-
----
-
-## 💡 Best Practices
-
-1. **Strict Isolation**: 
-   - Never use the database in these tests.
-   - Use `$this->createMock(Entity::class)` for related entities to avoid cascading setup.
-   
-2. **Descriptive Failures**: 
-   - Always provide a clear message in `InvalidArgumentException`.
-   - Use `expectExceptionMessageMatches()` in tests to ensure the *correct* rule triggered the failure.
-
-3. **Validation vs. Business Rules**: 
-   - Symfony Constraints (`#[Assert\NotBlank]`) handle basic form/API validation.
-   - Manager Rules handle complex domain logic, cross-field dependencies, and state transitions.
-
-4. **Integration**: 
-   - Use these Managers in your Controllers or Event Listeners before persisting data to ensure the entity is always in a valid state according to business requirements.
-
----
-
-## 📊 Available Managers
-
-| Entity | Manager Class | Test Class |
-|---|---|---|
-| **Bill** | `BillManager` | `BillManagerTest` |
-| **Budget** | `BudgetManager` | `BudgetManagerTest` |
-| **Complaint** | `ComplaintManager` | `ComplaintManagerTest` |
-| **ContractRequest** | `ContractRequestManager` | `ContractRequestManagerTest` |
-| **Expense** | `ExpenseManager` | `ExpenseManagerTest` |
-| **InsurancePackage** | `InsurancePackageManager` | `InsurancePackageManagerTest` |
-| **InsuredAsset** | `InsuredAssetManager` | `InsuredAssetManagerTest` |
-| **InsuredContract** | `InsuredContractManager` | `InsuredContractManagerTest` |
-| **Loan** | `LoanManager` | `LoanManagerTest` |
-| **Profile** | `ProfileManager` | `ProfileManagerTest` |
-| **Repayment** | `RepaymentManager` | `RepaymentManagerTest` |
-| **Role** | `RoleManager` | `RoleManagerTest` |
-| **Suggestion** | `SuggestionManager` | `SuggestionManagerTest` |
-| **User** | `UserManager` | `UserManagerTest` |
-
----
-
-## 🏗️ Database Seeding
-
-To populate your development or testing environment with realistic data, use the custom Symfony console commands.
-
-### 1. Seed all basic data
-This command seeds users, roles, insurance packages, and assets:
-```powershell
-php bin/console app:seed-user-data
-```
-
-### 2. Seed specific modules
-You can also seed financial data (budgets, expenses, loans) for specific users:
-```powershell
-php bin/console app:seed-finance-data --user=1
-```
-
----
-
-## 🔗 Integration Testing
-
-While Unit Tests (Manager Tests) are fast and isolated, Integration Tests verify that the managers work correctly with the actual database.
-
-### 1. Setup Test Database
-```powershell
-php bin/console --env=test doctrine:database:create
-php bin/console --env=test doctrine:schema:create
-```
-
-### 2. Run Integration Tests
-```powershell
-php bin/phpunit tests/Integration/
+mvn clean compile
 ```
 
 ---
